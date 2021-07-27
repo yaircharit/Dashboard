@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <meta name="theme-color" content="#742e74" />
+    <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/movies-4/48/pokemon-movie-cinema-ball-512.png">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <title>Matrix Dashboard</title>
+    <style>
+        .background {
+            background-image: linear-gradient(210deg, rgb(164, 185, 243), rgb(243, 164, 184));
+            border: 0px;
+            border-radius: 0px;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: -100;
+            top: 0;
+            left: 0;
+        }
+
+        footer {
+            background-color: whitesmoke;
+            opacity: 90%;
+            bottom: 0;
+            right: 0;
+            margin: 0;
+            position: fixed;
+            border-radius: 50px 0 0 0;
+        }
+
+        button {
+            padding: 1rem;
+            color: white;
+            border-radius: 50px;
+            font-size: 1rem;
+        }
+
+        .littleButton {
+            height: 1em;
+            width: 1em;
+            padding: 0;
+            margin: 0.1em 0.3em;
+            float: right;
+            color: black;
+            border: 1px darkgray dotted;
+            text-align: center;
+            transition: transform 0.7s;
+        }
+
+        .deleteButton {
+            background-color: red;
+            float: left;
+            color: lightgrey;
+            align-items: center;
+            height: fit-content;
+            width: fit-content;
+            padding: 0 0.3em;
+            font-weight: 1000;
+        }
+
+        .addNewButton {
+            background-color: darkseagreen;
+            color: white;
+            text-align: center;
+            float: none;
+            font-size: 1em;
+            height: 2em;
+            width: 4em;
+        }
+
+        .addNewContainerButton {
+            height: 6em;
+            margin: 0.5em;
+            margin-left: 1.5em;
+            font-size: 4em;
+        }
+
+        .addNewCollectionButton {
+            display: none;
+            font-size: 4em;
+            width: 90%
+        }
+
+        .intButton {
+            right: 0;
+            margin: 1em;
+            position: static;
+        }
+
+        .editButton {
+            background-color: cornflowerblue;
+        }
+
+        .saveButton {
+            background-color: darkseagreen;
+        }
+
+        .collection-container {
+            padding: 10px;
+            margin: 1em;
+        }
+
+        .title {
+            font-weight: 500;
+            /* font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+                "Courier New", monospace; */
+            background-color: transparent;
+            border: transparent none;
+        }
+
+        .collection-title {
+            font-size: 1.7rem;
+        }
+
+        .flexing {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+        }
+
+        .container {
+            background-color: rgb(231, 230, 230);
+            margin: 0.5em;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            border: transparent 1px;
+            border-radius: 15px;
+        }
+
+        .container-body {
+            font-size: 20px;
+            background-color: rgb(231, 230, 230);
+            border-radius: 0 0 10px 10px;
+            padding: 0.5em;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            align-items: center;
+        }
+
+        .container-header {
+            background-color: rgb(49, 49, 49);
+            border: 3px solid black;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 5px black solid;
+            padding: 0.5em;
+            height: 100%;
+        }
+
+        .container-title {
+            font-size: 1.2rem;
+            color: #f7f7f7;
+        }
+
+        .container-content {
+            font-size: 20px;
+        }
+
+        li {
+            margin-bottom: 0.1em;
+            display: block;
+            /* width: 100%; */
+            text-align: center;
+            overflow: hidden;
+            transition: max-height 0.2s ease-in-out;
+            width: -webkit-fill-available;
+            height: -webkit-fill-available;
+        }
+
+        textarea {
+            resize: none;
+            float: left;
+            max-width: 90%;
+            transition: max-height 0.2s ease-in-out;
+        }
+
+        input {
+            opacity: 80%;
+            display: block;
+            padding-bottom: 0.1em;
+            min-width: 3em;
+        }
+
+        ul {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: max-height 0.2s ease-in-out;
+            width: -webkit-fill-available;
+            height: -webkit-fill-available;
+        }
+
+        .note,
+        .link {
+            margin-left: 1em
+        }
+
+        .expandable {
+            overflow: hidden;
+        }
+
+        .clickable {
+            color: #455b97;
+        }
+
+        input.clickable:read-only {
+            opacity: 100%;
+            cursor: pointer;
+        }
+
+        button:hover,
+        input.clickable:hover {
+            opacity: 50%;
+        }
+
+        button:disabled {
+            background-color: lightgrey;
+            color: darkgray;
+        }
+
+        button:disabled:hover {
+            opacity: 100%;
+        }
+    </style>
+
+    <script>
+        const TEXTAREA_WIDTH = 40
+
+        function createElement(element, attribute, inner) {
+            if (typeof (element) === "undefined") {
+                return false;
+            }
+            if (typeof (inner) === "undefined") {
+                inner = "";
+            }
+            var el = document.createElement(element);
+            if (typeof (attribute) === 'object') {
+                for (var key in attribute) {
+                    el.setAttribute(key, attribute[key]);
+                }
+            }
+
+            if (!Array.isArray(inner)) {
+                inner = [inner];
+            }
+
+            for (var k = 0; k < inner.length; k++) {
+                if (inner[k].tagName) {
+                    el.appendChild(inner[k]);
+                } else {
+                    el.appendChild(document.createTextNode(inner[k]));
+                }
+            }
+            if (element == 'input')
+                resizable(el)
+            return el;
+        }
+
+
+        var reg = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g
+
+        function resizable(el) {
+            function resize() {
+                el.style.width = `${((el.value.length - [...el.value.matchAll(reg)].length + 3) * 0.55)}em`
+            }
+
+            var e = 'keyup,keypress,focus,blur,change'.split(',');
+            for (var i in e) el.addEventListener(e[i], resize, false);
+            resize();
+        }
+
+        var editMode = false;
+        var interButton;
+
+        function interactionButton() {
+            editMode = !editMode;
+            if (editMode) {
+                // Enter edit mode
+                document.getElementById('downloadButton').disabled = true
+                let temp = substractLists(document.getElementsByClassName('title'), document.getElementsByClassName('const'))
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].readOnly = false;
+                }
+                temp = document.getElementsByTagName('ul');
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].style.border = '1px solid lightgrey';
+                }
+                toggleVisibility(document.getElementsByClassName('note'), 'none')
+                toggleVisibility(document.getElementsByClassName('littleButton'), 'block')
+
+                temp = substractLists(substractLists(document.getElementsByClassName('littleButton'), document.getElementsByClassName('deleteButton')), document.getElementsByClassName('addNewButton'))
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].style.transform = '';
+                }
+                // toggleVisibility(document.getElementsByClassName('const'), 'none')
+
+                interButton.className = 'intButton saveButton'
+                interButton.innerHTML = 'Save';
+            } else {
+                // Exit edit mode
+                toggleVisibility(document.getElementsByClassName('littleButton'), 'none')
+                toggleVisibility(document.getElementsByClassName('notesButton'), 'block')
+                toggleVisibility(document.getElementsByClassName('note'), 'none')
+                toggleVisibility(document.getElementsByClassName('link'), 'none')
+
+                document.getElementById('downloadButton').disabled = false
+                let temp = document.getElementsByClassName('title')
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].readOnly = true;
+                }
+                temp = document.getElementsByTagName('ul');
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].style.border = '';
+                }
+
+                temp = substractLists(substractLists(document.getElementsByClassName('littleButton'), document.getElementsByClassName('deleteButton')), document.getElementsByClassName('addNewButton'))
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].style.transform = '';
+                }
+                // Create a new JSON object from elements on screen. Update document.staticMarks
+                document.staticMarks = getCollectionsJSON()
+                entries = document.getElementsByClassName('entryRow')
+                for (let i = 0; i < entries.length; i++) {
+                    if (entries[i].getElementsByClassName('const').length > 0) {
+                        temp = entries[i].children[0].children
+                        temp[0].disabled = true
+                        temp[0].classList.add('const')
+                        temp[1].classList.add('const')
+                    }
+                }
+                ConstUpdate('container')
+                let containers = document.getElementsByClassName('top')
+                for (let i = 0; i < containers.length; i++) {
+                    if (containers[i].getElementsByClassName('const').length > 0) {
+                        temp = containers[i].children
+                        temp[0].disabled = true
+                        temp[0].classList.add('const')
+                        temp[1].classList.add('const')
+                    }
+                }
+                document.staticMarks = getCollectionsJSON()
+                console.log('State was saved: ', document.staticMarks)
+                interButton.className = 'intButton editButton';
+                interButton.innerHTML = 'Edit';
+            }
+        }
+
+        function ConstUpdate(className) {
+            let containers = document.getElementsByClassName(className)
+            for (let i = 0; i < containers.length; i++) {
+                if (containers[i].getElementsByClassName('const').length > 0) {
+                    temp = containers[i].children[0]
+                    temp.children[0].disabled = true
+                    temp.children[0].classList.add('const')
+                    temp.children[1].classList.add('const')
+                }
+            }
+        }
+
+        function getCollectionsJSON() {
+            let res = {};
+            let arr = []
+            let temp
+
+            for (collection in placeholder.children) {
+                arr = []
+                if (typeof (placeholder.children[collection]) == 'object' && placeholder.children[collection].tagName == 'DIV') {
+                    temp = placeholder.children[collection].getElementsByClassName('collection-container')[0].children
+                    for (item in temp) {
+                        if (typeof (temp[item]) == 'object' && temp[item].tagName == 'DIV')
+                            arr[item] = getContainerJSON(temp[item])
+                    }
+                    res[placeholder.children[collection].children[1].value] = arr
+                }
+            }
+            return res;
+        }
+
+        function getContainerJSON(containerObj) {
+            let arr = []
+            let res = {}
+
+            let temp = containerObj.children[1].getElementsByClassName('entry')
+            for (entry in temp)
+                if (typeof (temp[entry]) == 'object')
+                    arr[entry] = getEntryJSON(temp[entry].children[0])
+
+            res[containerObj.children[0].children[1].value] = arr
+            return res;
+        }
+
+        function getEntryJSON(lineObj) {
+            let key, val, res = {};
+            let temp
+
+            if (lineObj.children.length > 2) {
+                temp = lineObj.children[0].children
+                key = temp[2].value
+                if (key[0] == '*') {
+                    for (let i = 0; i < 4; i++) {
+                        if (i != 1)
+                            temp[i].classList.add('const')
+                    }
+                    temp[0].disabled = true
+                    temp[2].value = key.substr(1)
+                    
+                }
+                else if (temp[2].classList.contains('const')) {
+                    key = '*' + key
+                }
+                val = temp[3].innerHTML
+                res[key] = []
+                res[key][0] = val;
+                for (let i = 1; i < lineObj.children.length - 1; i++) {
+                    if (lineObj.children[i].children[0].tagName == 'TEXTAREA')
+                        res[key][i] = lineObj.children[i].children[0].innerHTML
+                    else
+                        res[key][i] = getEntryJSON(lineObj.children[i].children[0])
+                }
+            } else {
+                temp = lineObj.children[0].children
+                key = temp[2].value
+                val = temp[3].innerHTML
+                if (key[0] == '*') {
+                    for (let i = 0; i < 4; i++) {
+                        if (i != 1)
+                            temp[i].classList.add('const')
+                    }
+                    temp[0].disabled = true
+                    temp[2].value = key.substr(1)
+                    
+                }
+                else if (temp[2].classList.contains('const')) {
+                    key = '*' + key
+                }
+                res[key] = val
+            }
+
+            return res;
+        }
+
+        function toggleExpanded(btn) {
+            let par = btn.parentElement.parentElement
+            let item, elemList = [],
+                num, elem;
+
+            for (c in par.children) {
+                item = par.children[c]
+                if (typeof (item) == 'object') {
+
+                    if ((editMode || (!item.classList.contains('AddNewButton') && !item.classList.contains('link'))) && item != btn.parentElement) {
+                        elemList.push(item)
+                    }
+                    num = item.children.length
+                    if ((num == 4 || num == 1) && item.children[num - 1].tagName == 'TEXTAREA') {
+                        elem = item.children[num - 1]
+                        let temp = elem.value.length / Math.min(TEXTAREA_WIDTH, elem.value.length);
+                        if (!Number.isInteger(temp))
+                            temp = Math.round(++temp);
+                        elem.rows = temp
+
+                        elem.cols = ((editMode || !elem.classList.contains('link')) && (elem.style.maxHeight == '0px' || elem.style.maxHeight == '')) ? Math.min(TEXTAREA_WIDTH, elem.value.length + [...elem.value.matchAll(reg)].length * 5 + 1) : 1;
+
+                        if (editMode || !elem.classList.contains('link'))
+                            elemList.push(elem)
+                    }
+                }
+            }
+
+            btn.style.transform = (btn.style.transform == '') ? 'rotate(180deg)' : null;
+            toggleVisibility(elemList)
+        }
+
+        function substractLists(A, B) {
+            if (A == undefined || B == undefined)
+                return A;
+            if (!Array.isArray(A))
+                A = Array.from(A)
+            if (!Array.isArray(B))
+                B = Array.from(B)
+            return A.filter((n) => !B.includes(n))
+        }
+
+        function toggleVisibility(elemList, state) {
+            for (item in elemList) {
+                if (typeof (elemList[item]) == 'object') {
+                    if (elemList[item].tagName != 'BUTTON' && elemList[item].tagName != 'LI') {
+                        if (state != undefined) {
+                            elemList[item].style.maxHeight = (state == 'none') ? '0px' : `${elemList[item].scrollHeight}px`
+                        } else {
+                            elemList[item].style.maxHeight = (elemList[item].style.maxHeight == '0px') ? `${elemList[item].scrollHeight}px` : '0px'
+                        }
+                    } else {
+                        if (state != undefined) {
+                            elemList[item].style.display = state
+                        } else {
+                            elemList[item].style.display = (elemList[item].style.display == 'none') ? 'block' : 'none'
+                        }
+                    }
+                }
+            }
+        }
+
+        function onTitleClick(btn) {
+            if (editMode) {
+                console.log('NNNOOOOO! please! I don\'t like changes :(')
+            } else {
+                let dir = btn.parentElement.getElementsByClassName('link')[0].value
+                if (dir != '') {
+                    if (dir.startsWith('https://') || dir.endsWith('.pdf') || dir.startsWith('https:\\\\') || dir.startsWith('http://') || dir.startsWith('http:\\\\')) {
+                        window.open(dir, '_blank')
+                    } else {
+                        navigator.clipboard.writeText(dir).then(function () {
+                            alert(`${dir} was copied to your clipboard.\nTo open press Winkey+R, Winkey+V, Enter `)
+                        }, function () {
+                            alert('ERROR\nPlease try again')
+                        })
+                    }
+                }
+            }
+        }
+
+        function deleteButtonClick(elem) {
+            elem = elem.parentElement
+            let par = elem.parentElement
+
+            if (par.classList.contains('entryRow')) {
+                elem = par.parentElement
+            } else if (elem.classList.contains('container-header')) {
+                elem = elem.parentElement;
+            }
+            par = elem.parentElement
+            par.removeChild(elem)
+        }
+
+        function addNewButtonClick(btn, lvl) {
+            let container, elem = btn,
+                res = undefined;
+
+            switch (lvl) {
+                case 0:
+                    container = btn.parentElement.parentElement
+                    elem = btn.parentElement
+                    res = generateCollection({ '': [{ '': [{ '': '' }] }] })[0]
+                    break;
+                case 1:
+                    container = btn.parentElement.parentElement
+                    elem = btn.parentElement
+                    res = generateContainer({ '': [{ '': '' }] })
+                    break;
+                case 2:
+                    container = btn.parentElement.parentElement.parentElement
+                    elem = btn.parentElement.parentElement
+                    res = createElement('li', { name: 'entry', class: 'entry' }, generateLine({ '': '' }, 2))
+                    break;
+                case 3:
+                    container = btn.parentElement.parentElement.parentElement
+                    elem = btn.parentElement.parentElement
+                    res = createElement('li', { name: 'notes', class: 'note' }, generateLine({ '': '' }, 3))
+                    container.children[0].children[1].className += ' notesButton'
+                    break;
+                default:
+                    break;
+            }
+
+            if (res != undefined) {
+                let temp = res.getElementsByClassName('title')
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].readOnly = false;
+                }
+                temp = res.getElementsByTagName('ul')
+                for (e in temp) {
+                    if (typeof (temp[e]) == 'object')
+                        temp[e].style.border = '1px lightgrey solid';
+                }
+                toggleVisibility(res.getElementsByClassName('littleButton'), 'block')
+                toggleVisibility(res.getElementsByClassName('AddNewButton'), 'block')
+
+                container.removeChild(elem)
+                container.appendChild(res)
+                container.appendChild(elem)
+            }
+        }
+
+        function generateLinksList(jsonObj) {
+            let res = createElement('ul', { class: 'container-body', style: { border: (editMode) ? '1px lightgrey solid' : '' } });
+            let current_line, current_object, temp, temp2;
+            let val, key, classes, k, v;
+            if (typeof (jsonObj) == 'object')
+                jsonObj = Object.values(jsonObj)[0]
+            for (let i in jsonObj) {
+                res.appendChild(createElement('li', { name: 'entry', class: 'entry' }, generateLine(jsonObj[i], 0)))
+            }
+            res.appendChild(createElement('li', { name: 'addNewButton', class: 'AddNewButton' }, createElement('center', {}, createElement('button', { class: 'littleButton note addNewButton', onclick: 'addNewButtonClick(this , 2)' }, '+'))))
+            return res;
+        }
+
+        function generateLine(json, lvl = 0, isConst = false) {
+            let val = Object.values(json)[0];
+            let isObj = typeof (val) == 'object'
+            let classes
+            let current_object = createElement('ul', { name: 'entry-body', class: 'entryRow' })
+            let temp2 = (isObj) ? val[0] : val
+            let key = Object.keys(json)[0]
+
+            if (key[0] == '*') {
+                key = key.substr(1);
+                isConst = true;
+            }
+
+            classes = `title ${(isConst) ? 'const' : ''}`
+            let temp = createElement('li', { class: classes })
+            classes = `littleButton deleteButton ${(isConst) ? 'const' : ''}`
+
+            if (isConst)
+                temp.appendChild(createElement('button', { class: classes, onclick: 'deleteButtonClick(this)', disabled: true }, 'X'))
+            else
+                temp.appendChild(createElement('button', { class: classes, onclick: 'deleteButtonClick(this)' }, 'X'))
+            classes = `littleButton ${((isObj) ? 'notesButton' : '')} ${(isConst) ? 'const' : ''}`
+            temp.appendChild(createElement('button', { class: classes, onclick: 'toggleExpanded(this)' }, 'v'))
+
+            classes = `container-content title ${(temp2 != '') ? 'clickable' : ''} ${((isConst) ? 'const' : '')}`
+            temp.appendChild(createElement('input', { class: classes, value: key, readonly: true, onclick: 'onTitleClick(this)', placeholder: 'Title' }, key))
+            classes = `container-content title link expandable ${(isConst) ? 'const' : ''}`
+            temp.appendChild(createElement('textarea', { class: classes, readonly: true, value: temp2, placeholder: 'URL' }, temp2))
+            current_object.appendChild(temp)
+
+            if (isObj) {
+                let isFirst = true;
+                for (item in val) {
+                    if (!isFirst) {
+                        classes = `note ${(isConst) ? 'const' : ''}`
+                        temp = createElement('li', {
+                            name: 'note',
+                            class: classes
+                        })
+                        if (typeof (val[item]) == 'object') {
+                            temp.appendChild(generateLine(val[item], lvl + 1))
+                        } else {
+                            classes = `container-content title ${(isConst) ? 'const' : ''}`
+                            temp.appendChild(createElement('textarea', { name: 'note', class: classes, readonly: true, wrap: 'hard', cols: Math.min(TEXTAREA_WIDTH, val[item].length), placeholder: 'Title' }, val[item]))
+                        }
+                        current_object.appendChild(temp)
+                    }
+                    isFirst = false;
+                }
+
+            }
+            classes = `note AddNewButton ${((lvl > 0) ? ' ' : '')}`
+            current_object.appendChild(createElement('li', { name: 'addNewButton', class: classes }, createElement('center', {}, createElement('button', { class: ' addNewButton littleButton expandable ', onclick: 'addNewButtonClick(this,3)' }, '+'))))
+
+            if (current_object.getElementsByClassName('const').length > 0) {
+                temp = current_object.children[0]
+                for (let i = 0; i < 4; i++) {
+                    if (i != 1)
+                        temp.children[i].classList.add('const')
+                }
+                temp.children[0].disabled = true;
+            }
+            return current_object
+        }
+
+        function generateCollection(json) {
+            let currCollection, currContainer, contBody, surround, temp;
+            let res = [];
+            for (collection in json) {
+                surround = createElement('div', { class: 'collection-container top' })
+                surround.appendChild(createElement('button', { class: 'littleButton  deleteButton', onclick: 'deleteButtonClick(this)' }, 'X'))
+                surround.appendChild(createElement('input', { class: 'title collection-title', value: collection, id: collection, readonly: true, placeholder: 'Title' }, collection))
+                currCollection = surround.appendChild(createElement('div', { class: 'collection-container flexing', id: collection }))
+                res.push(surround)
+                for (container in json[collection]) {
+                    currCollection.appendChild(generateContainer(json[collection][container]))
+                }
+                currCollection.appendChild(createElement('center', {}, createElement('button', { class: 'littleButton addNewButton addNewContainerButton', onclick: 'addNewButtonClick(this,1)' }, '+')))
+                toggleVisibility(surround.getElementsByClassName('note'), 'none')
+                toggleVisibility(surround.getElementsByClassName('littleButton'), 'none')
+                toggleVisibility(surround.getElementsByClassName('notesButton'), 'block')
+                if (currCollection.getElementsByClassName('const').length > 0) {
+                    surround.children[0].disabled = true;
+                    surround.children[0].classList.add('const')
+                    surround.children[1].classList.add('const')
+                }
+            }
+            return res;
+        }
+
+        function generateContainer(json) {
+            let res
+            res = createElement('div', { class: 'container' })
+            contBody = createElement('div', { class: 'container-body' })
+
+            temp = createElement('div', { class: 'container-header' })
+            temp.appendChild(createElement('button', { class: 'littleButton  deleteButton', onclick: 'deleteButtonClick(this)' }, 'X'))
+            temp.appendChild(createElement('input', { class: 'title container-title', id: Object.keys(json)[0], value: Object.keys(json)[0], readonly: true, placeholder: 'Title' },))
+            res.appendChild(temp);
+            for (item in json)
+                res.appendChild(generateLinksList(json));
+
+            if (res.getElementsByClassName('const').length > 0) {
+                temp.children[0].disabled = true;
+                temp.children[0].classList.add('const')
+                temp.children[1].classList.add('const')
+            }
+
+            return res
+        }
+    </script>
+</head>
+
+<body>
+    <div class="background"></div>
+    <div id="placeholder"></div>
+
+    <footer>
+        <div style="float:right; margin-bottom: 30px;">
+            <button id='interButton' class="intButton editButton" onclick='interactionButton()'>Edit</button>
+            <button id="downloadButton" class="intButton saveButton"
+                onclick="downloadButtonClick()">Download</button></a>
+        </div>
+        <p style="bottom:0; right: 1em; position:fixed">Made by Yair :)</p>
+
+        <script>
+            // %INJECT HERE%
+            // document.staticMarks will be inserted above. the line below is only for testing purposes
+
+            placeholder = document.getElementById('placeholder')
+            interButton = document.getElementById('interButton')
+            temp = generateCollection(document.staticMarks)
+            for (collection in temp)
+                placeholder.appendChild(temp[collection])
+            placeholder.appendChild(createElement('center', {}, createElement('button', { class: 'littleButton addNewButton addNewCollectionButton expandable', onclick: 'addNewButtonClick(this,0)' }, '+')))
+
+            toggleVisibility(document.getElementsByClassName('expandable'))
+            toggleVisibility(document.getElementsByClassName('addNewButton'), 'none')
+            toggleVisibility(document.getElementsByTagName('TEXTAREA'), 'none')
+
+            function downloadButtonClick() {
+                let temp = document.documentElement.innerHTML.substr(0, document.documentElement.innerHTML.search('<body>'))
+                temp += '<div class="background"></div>\n<body><div id="placeholder"><\/div>'
+                temp += document.documentElement.innerHTML.substr(document.documentElement.innerHTML.search('<footer>'))
+                temp = temp.replace(/.*document\.staticMarks =.*{.*\n/g, `\t\t\tdocument.staticMarks = ${JSON.stringify(document.staticMarks)}\n`)
+                var element = document.createElement('a');
+                element.setAttribute('href', `data:text/html;charset=utf-8,${encodeURIComponent(temp)}`);
+                element.setAttribute('download', 'MatrixDashboard.html');
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
+        </script>
+    </footer>
+</body>
+
+</html>
