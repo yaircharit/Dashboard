@@ -229,7 +229,7 @@
 
         /* News Ticker */
         #placeholder{
-            margin-top:50px;
+            margin-bottom:50px;
         }
 
         .vwrap,
@@ -246,10 +246,12 @@
             width: -webkit-fill-available;
             background: #eee;
             margin: 0 1.5em;
-            top: 0;
+            bottom: 0;
             border: 2px solid rgb(184, 184, 184);
-            border-top:rgb(184, 184, 184) solid 10px;
+            border-bottom:rgb(184, 184, 184) solid 10px;
             box-shadow: black 2px;
+            border-radius: 15px 15px 0 0;
+            margin-right: 6em;
         }
 
         .vitem {
@@ -262,17 +264,15 @@
 
         @keyframes tickerv {
 			0.0% {bottom: 0px}
-			16.666666666666668% {bottom: 30px}
-			33.333333333333336% {bottom: 60px}
-			50.0% {bottom: 90px}
-			66.66666666666667% {bottom: 120px}
-			83.33333333333334% {bottom: 150px}
+			25.0% {bottom: 30px}
+			50.0% {bottom: 60px}
+			75.0% {bottom: 90px}
 			100% {bottom: 0px}
         }
 
         .vmove {
             animation-name: tickerv;
-			animation-duration: 42s;
+			animation-duration: 28s;
             animation-iteration-count: infinite;
             animation-timing-function: cubic-bezier(1, 0, .5, 0);
         }
@@ -805,7 +805,7 @@
         <script>
 			document.staticMarks = {'Main Collection': [{'🌐Search Engines': [{'*🔎Google': 'https://www.google.com'}, {'🧷Bing': 'https://www.Bing.com'}]}, {'📢 Social Media': [{'💠Facebook': ['https://www.facebook.com', {'📸Instegram': 'https://www.instegram.com'}, {'✔️Whatsapp': 'https://web.whatsapp.com'}]}, {'🌀Twitter': 'https://www.twitter.com'}, {'🔻Youtube': 'https://www.youtube.com'}]}, {'📰News Sites': [{'Popular News Sites': ''}, {'🦊 FOX': 'https://www.foxnews.com'}, {'☕️ BBC': 'https://www.bbc.com/news'}, {'🏈 ESPN': 'https://www.espn.com/'}]}], 'Created By': [{'Yair Charit': [{'👨🏽\u200d💻 See some more of my work 👨🏽\u200d💻': ''}, {'*👓Portfolio': 'https://yaircharit.github.io'}, {'*💼LinkedIn': 'https://il.linkedin.com/in/yair-charit'}, {'*👷🏽\u200d♂️ Github': 'https://github.com/yaircharit'}]}]}
             // document.staticMarks will be inserted above. the line below is only for testing purposes
-			document.newsFeed = ['news1', 'news2', 'news3', 'news4', 'news 45345 asdasd', 'Today I found']
+			document.newsFeed = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Aliquam consequat varius consequat.', 'Fusce dapibus turpis vel nisi malesuada sollicitudin.', 'Pellentesque auctor molestie orci ut blandit.']
 
 
             news_placeholder = document.getElementById('news_placeholder')
