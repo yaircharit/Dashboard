@@ -28,7 +28,7 @@
             right: 0;
             margin: 0;
             position: fixed;
-            border-radius: 50px 0 0 0;
+            border-radius: 25px 0 0 0;
         }
 
         button {
@@ -86,7 +86,7 @@
 
         .intButton {
             right: 0;
-            margin: 1em;
+            margin: 0.5em;
             position: static;
         }
 
@@ -225,6 +225,48 @@
 
         button:disabled:hover {
             opacity: 100%;
+        }
+        /* News Ticker */
+        /* (A) STANDARD ROW HEIGHT */
+        .vwrap,
+        .vitem {
+            height: 30px;
+            line-height: 30px;
+            font-size: 24px;
+        }
+
+        /* (B) FIXED WRAPPER */
+        .vwrap {
+            overflow: hidden;
+            /* HIDE SCROLL BAR */
+            background: #eee;
+        }
+
+        /* (C) TICKER ITEMS */
+        .vitem {
+            text-align: center;
+        }
+
+        /* (D) ANIMATION - MOVE ITEMS FROM TOP TO BOTTOM */
+        /* CHANGE KEYFRAMES IF YOU ADD/REMOVE ITEMS */
+        .vmove {
+            position: relative;
+        }
+
+        @keyframes tickerv {
+            /* %INJECT NEWSFEED ANIMATION HERE% */
+            
+        }
+        
+        .vmove {
+            animation-name: tickerv;
+            /* %INJECT NEWSFEED DURATION HERE% */
+            animation-iteration-count: infinite;
+            animation-timing-function: cubic-bezier(1, 0, .5, 0);
+        }
+
+        .vmove:hover {
+            animation-play-state: paused;
         }
     </style>
 
@@ -717,24 +759,38 @@
 
             return res
         }
+
+        function insertNews(json){
+            let res = '<div class="vmove">'
+            for (item in json)
+                res = `${res}\n<div class="vitem">${json[item]}</div>`
+            res = `${res}\n</div>`
+            return res
+        }
     </script>
 </head>
 
 <body>
     <div class="background"></div>
+    <div id="news_placeholder" class="vwrap"></div>
     <div id="placeholder"></div>
 
     <footer>
-        <div style="float:right; margin-bottom: 30px;">
+        <div style="float:right; margin-bottom: 2em; flex-direction: column; display: flex; ">
             <button id='interButton' class="intButton editButton" onclick='interactionButton()'>Edit</button>
             <button id="downloadButton" class="intButton saveButton"
                 onclick="downloadButtonClick()">Download</button></a>
         </div>
-        <p style="bottom:0; right: 1em; position:fixed">Made by Yair :)</p>
+        <p style="bottom:0; right: 1em; position:fixed">Made by Yair :)</p><br><a style="bottom:0; right: 1em; position:fixed" href="https://github.com/yaircharit/Dashboard-Plus">Git Repository</a>
 
         <script>
-            // %INJECT HERE%
+			// %INJECT BOOKMARKS HERE%
             // document.staticMarks will be inserted above. the line below is only for testing purposes
+            // %INJECT NEWSFEED HERE%
+
+
+            news_placeholder = document.getElementById('news_placeholder')
+            news_placeholder.innerHTML = insertNews(document.newsFeed)
 
             placeholder = document.getElementById('placeholder')
             interButton = document.getElementById('interButton')
