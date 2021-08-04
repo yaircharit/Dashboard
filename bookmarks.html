@@ -825,7 +825,7 @@
 
             function downloadButtonClick() {
                 let temp = document.documentElement.innerHTML.substr(0, document.documentElement.innerHTML.search('<body>'))
-                temp += '<div class="background"></div>\n<body><div id="placeholder"><\/div>'
+                temp += '<body>\n<div class="background"><\/div>\n<div id="placeholder"><\/div>\n<div id="news_placeholder" class="vwrap"><\/div>'
                 temp += document.documentElement.innerHTML.substr(document.documentElement.innerHTML.search('<footer>'))
                 temp = temp.replace(/.*document\.staticMarks =.*{.*\n/g, `\t\t\tdocument.staticMarks = ${JSON.stringify(document.staticMarks)}\n`)
                 var element = document.createElement('a');
