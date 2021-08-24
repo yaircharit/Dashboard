@@ -279,9 +279,10 @@
         }
 
         .vitem {
-            text-align: center;
+            text-align: left;
             overflow-x: hidden;
             font-size: 20px;
+            width: -webkit-fill-available;
         }
 
         @keyframes tickerv {
@@ -289,8 +290,10 @@
         }
 
         .vmove {
+            width: -webkit-fill-available;
             position: relative;
             margin-top: -10px;
+            margin-left: 2em;
             animation-name: tickerv;
             /* %INJECT NEWSFEED DURATION HERE% */
             animation-iteration-count: infinite;
@@ -792,17 +795,46 @@
             return res
         }
 
-        function insertNews(json) {
-            let res = ''
-            if (json != undefined && json.length > 0) {
-                res = '<div class="vmove">'
-                for (item in json)
-                    res = `${res}\n<div class="vitem">${json[item]}</div>`
-                res = `${res}\n</div>`
+        function generateNews(json) {
+            let res = '<div class="vitem">Nothing to see here</div>\n'
+            let currTime = new Date()
+            let count = 0
+            let base_prec = 0
+            let d, h, temp
+
+            if (json != undefined && Object.keys(json).length > 0) {
+                res = ''
+                for (item in json) {
+                    if (json[item] == 'never') {
+                        res += `<div class="vitem">${item}</div>\n`
+                        count++;
+                    }
+                    else {
+                        temp = json[item].split(' ')
+                        d = temp[0].split('/')
+
+                        if (new Date(`${d[2]}/${d[1]}/${d[0]} ${temp[1]}`) > currTime) {
+                            res += `<div class="vitem">${item}</div>\n`
+                            count++;
+                        }
+                    }
+                }
+                news_placeholder.innerHTML += `\n<div class="vmove">\n${res}</div>\n`
+
+                if (count > 1) {
+                    let res_anim = ''
+                    base_prec = 100 / count;
+                    for (let i = 0; i < count; i++) {
+                        res_anim += `\t\t\t${base_prec * i}% {bottom: ${70 * i}px;}\n`
+                    }
+                    res_anim += '\t\t\t100% {bottom: 0px;}\n'
+                    document.documentElement.innerHTML = document.documentElement.innerHTML.replace(/\/\* %INJECT NEWSFEED ANIMATION HERE% \*\//, res_anim)
+                    document.documentElement.innerHTML = document.documentElement.innerHTML.replace(/\/\* %INJECT NEWSFEED DURATION HERE% \*\//, `\t\t\tanimation-duration: ${count * 7}s;`)
+                }
             } else {
-                news_placeholder.style.display = 'none'
+                news_placeholder.innerHTML += `\n<div class="vmove">\n${res}</div>\n`
             }
-            return res
+            
         }
     </script>
 </head>
@@ -810,9 +842,9 @@
 <body>
     <div class="background"></div>
     <div id="topbar">
-        
+
         <div id="news_placeholder" class="vwrap"><img src="BW Logo.png"
-            style="height: 3em;  border-radius: 0 0 25px 25px;"></div>
+                style="height: 3em;  border-radius: 0 0 25px 25px;"></div>
 
     </div>
     <div id="placeholder"></div>
@@ -835,8 +867,7 @@
 
 
             news_placeholder = document.getElementById('news_placeholder')
-            news_placeholder.innerHTML += insertNews(document.newsFeed)
-
+            generateNews(document.newsFeed)
             placeholder = document.getElementById('placeholder')
             interButton = document.getElementById('interButton')
             temp = generateCollection(document.staticMarks)
