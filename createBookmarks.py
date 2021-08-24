@@ -7,6 +7,7 @@ newsfeed_placeholder = '// %INJECT NEWSFEED HERE%'
 newsfeed_animation_placeholder = '/* %INJECT NEWSFEED ANIMATION HERE% */'
 newsfeed_duration_placeholder = '/* %INJECT NEWSFEED DURATION HERE% */'
 newsfeed_animation_duration = 7 #in seconds
+newsfeed_font_size = 70 #in pixels
 
 parser = argparse.ArgumentParser(
     description="Creates a static bookmarks site from a given y(a)ml file and an HTML template."
@@ -55,7 +56,7 @@ for line in range(0, len(template)):
         base_prec = max_prec / len(news)
         res = ''
         for i in range(len(news)):
-            res += f'\t\t\t{base_prec*i}% {{bottom: {int(30*i)}px}}\n'
+            res += f'\t\t\t{base_prec*i}% {{bottom: {int(newsfeed_font_size*i)}px}}\n'
         res += f'\t\t\t100% {{bottom: 0px}}\n'
         template[line] = res
         
