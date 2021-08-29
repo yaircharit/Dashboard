@@ -39,7 +39,6 @@ with open(args.bookmarks_file, "r", encoding=choosen_encoding) as f:
 with open(args.news_file, "r", encoding=choosen_encoding) as f:
     print(f"Reading {args.news_file}")
     news = yaml.full_load(f)
-    print(news)
 
 with open(args.template_file, "r", encoding=choosen_encoding) as f:
     print(f"Reading {args.template_file}")

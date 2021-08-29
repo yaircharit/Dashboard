@@ -15,7 +15,7 @@
         }
 
         .background {
-            background-image: linear-gradient(210deg, rgb(129, 140, 194), rgb(48, 64, 107));
+            background-image: linear-gradient(210deg, rgb(0, 158, 160),rgb(0, 82, 83),rgb(0, 85, 199),rgb(0, 182, 250));
             background-size: 400% 400%;
             border: 0px;
             border-radius: 0px;
@@ -50,6 +50,8 @@
             margin: 0;
             position: fixed;
             border-radius: 25px 0 0 0;
+            display: flex;
+            flex-direction: column;
         }
 
         button {
@@ -121,7 +123,7 @@
         }
 
         .collection-container {
-            padding: 10px;
+            /* padding: 10px; */
             margin: 1em;
         }
 
@@ -150,6 +152,7 @@
             height: fit-content;
             border: transparent 1px;
             border-radius: 15px;
+            width: max-content;
         }
 
         .container-body {
@@ -161,7 +164,8 @@
             display: flex;
             flex-direction: column;
             height: fit-content;
-            align-items: center;
+            align-items: flex-start;
+            width: -webkit-fill-available;
         }
 
         .container-header {
@@ -171,6 +175,7 @@
             border-bottom: 5px rgb(49, 49, 49, 0.9) solid;
             padding: 0.5em;
             height: 100%;
+            width: -webkit-fill-available;
         }
 
         .container-title {
@@ -183,13 +188,13 @@
         }
 
         li {
-            margin-bottom: 0.1em;
+            /* margin-bottom: 0.1em; */
             display: block;
             /* width: 100%; */
             text-align: center;
             overflow: hidden;
             transition: max-height 0.2s ease-in-out;
-            width: -webkit-fill-available;
+            width: fit-content;
             height: -webkit-fill-available;
         }
 
@@ -343,12 +348,12 @@
 
         function resizable(el) {
             function resize() {
-                el.style.width = `${((el.value.length - [...el.value.matchAll(reg)].length + 3) * 0.55)}em`
+                el.style.width = `${((el.value.length+4 - [...el.value.matchAll(reg)].length*2)*10)}px`
             }
-
+            resize();
             var e = 'keyup,keypress,focus,blur,change'.split(',');
             for (var i in e) el.addEventListener(e[i], resize, false);
-            resize();
+            
         }
 
         var editMode = false;
@@ -574,8 +579,10 @@
                 if (typeof (elemList[item]) == 'object') {
                     if (elemList[item].tagName != 'BUTTON' && elemList[item].tagName != 'LI') {
                         if (state != undefined) {
+                            elemList[item].style.display = state
                             elemList[item].style.maxHeight = (state == 'none') ? '0px' : `${elemList[item].scrollHeight}px`
                         } else {
+                            elemList[item].style.display = (elemList[item].style.display == 'none') ? 'block' : 'none'
                             elemList[item].style.maxHeight = (elemList[item].style.maxHeight == '0px') ? `${elemList[item].scrollHeight}px` : '0px'
                         }
                     } else {
@@ -765,6 +772,7 @@
                 toggleVisibility(surround.getElementsByClassName('note'), 'none')
                 toggleVisibility(surround.getElementsByClassName('littleButton'), 'none')
                 toggleVisibility(surround.getElementsByClassName('notesButton'), 'block')
+                toggleVisibility(document.getElementsByClassName('link'), 'none')
                 if (currCollection.getElementsByClassName('const').length > 0) {
                     surround.children[0].disabled = true;
                     surround.children[0].classList.add('const')
@@ -830,6 +838,7 @@
                     res_anim += '\t\t\t100% {bottom: 0px;}\n'
                     document.documentElement.innerHTML = document.documentElement.innerHTML.replace(/\/\* %INJECT NEWSFEED ANIMATION HERE% \*\//, res_anim)
                     document.documentElement.innerHTML = document.documentElement.innerHTML.replace(/\/\* %INJECT NEWSFEED DURATION HERE% \*\//, `\t\t\tanimation-duration: ${count * 7}s;`)
+                    console.log(document.documentElement.innerHTML)
                 }
             } else {
                 news_placeholder.innerHTML += `\n<div class="vmove">\n${res}</div>\n`
@@ -843,19 +852,18 @@
     <div class="background"></div>
     <div id="topbar">
 
-        <div id="news_placeholder" class="vwrap"><img src="BW Logo.png"
-                style="height: 3em;  border-radius: 0 0 25px 25px;"></div>
+        <div id="news_placeholder" class="vwrap"></div>
 
     </div>
     <div id="placeholder"></div>
 
     <footer>
-        <div style="float:right; margin-bottom: 2em; flex-direction: column; display: none; ">
+        <div style="float:right; margin-bottom: 2em; flex-direction: column; display: flex; ">
             <button id='interButton' class="intButton editButton" onclick='interactionButton()'>Edit</button>
             <button id="downloadButton" class="intButton saveButton"
                 onclick="downloadButtonClick()">Download</button></a>
         </div>
-        <div style="float:right; bottom: 0; flex-direction: column; display: flex; padding: 0 1em;  ">
+        <div style="float:right; bottom: 0; flex-direction: column; display: flex; padding: 1em;  ">
             <p style="margin: 0%;">Made by Yair Charit</p>
             <a href="https://github.com/yaircharit/Dashboard-Plus">Git Repository</a>
         </div>
@@ -863,7 +871,7 @@
         <script>
 			document.staticMarks = {'Main Collection': [{'🌐Search Engines': [{'*🔎Google': 'https://www.google.com'}, {'🧷Bing': 'https://www.Bing.com'}]}, {'📢 Social Media': [{'💠Facebook': ['https://www.facebook.com', {'📸Instegram': 'https://www.instegram.com'}, {'✔️Whatsapp': 'https://web.whatsapp.com'}]}, {'🌀Twitter': 'https://www.twitter.com'}, {'🔻Youtube': 'https://www.youtube.com'}]}, {'📰News Sites': [{'Popular News Sites': ''}, {'🦊 FOX': 'https://www.foxnews.com'}, {'☕️ BBC': 'https://www.bbc.com/news'}, {'🏈 ESPN': 'https://www.espn.com/'}]}], 'Created By': [{'Yair Charit': [{'👨🏽\u200d💻 See some more of my work 👨🏽\u200d💻': ''}, {'*👓Portfolio': 'https://yaircharit.github.io'}, {'*💼LinkedIn': 'https://il.linkedin.com/in/yair-charit'}, {'*👷🏽\u200d♂️ Github': 'https://github.com/yaircharit'}]}]}
             // document.staticMarks will be inserted above. the line below is only for testing purposes
-            // %INJECT NEWSFEED HERE%
+			document.newsFeed = {'Happy Birthday!': 'never', 'Thanks!': '25/08/2021 14:00', 'What about me?': '20/08/2021 14:00'}
 
 
             news_placeholder = document.getElementById('news_placeholder')
