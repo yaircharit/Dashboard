@@ -194,7 +194,7 @@
             text-align: center;
             overflow: hidden;
             transition: max-height 0.2s ease-in-out;
-            width: fit-content;
+            width: -webkit-fill-available;
             height: -webkit-fill-available;
         }
 
@@ -852,18 +852,19 @@
     <div class="background"></div>
     <div id="topbar">
 
-        <div id="news_placeholder" class="vwrap"></div>
+        <div id="news_placeholder" class="vwrap"><img src="BW Logo.png"
+                style="height: 3em;  border-radius: 0 0 25px 25px;"></div>
 
     </div>
     <div id="placeholder"></div>
 
     <footer>
-        <div style="float:right; margin-bottom: 2em; flex-direction: column; display: flex; ">
+        <div style="float:right; margin-bottom: 2em; flex-direction: column; display: none; ">
             <button id='interButton' class="intButton editButton" onclick='interactionButton()'>Edit</button>
             <button id="downloadButton" class="intButton saveButton"
                 onclick="downloadButtonClick()">Download</button></a>
         </div>
-        <div style="float:right; bottom: 0; flex-direction: column; display: flex; padding: 1em;  ">
+        <div style="float:right; bottom: 0; flex-direction: column; display: flex; padding: 0 1em;  ">
             <p style="margin: 0%;">Made by Yair Charit</p>
             <a href="https://github.com/yaircharit/Dashboard-Plus">Git Repository</a>
         </div>
@@ -871,7 +872,7 @@
         <script>
 			document.staticMarks = {'Main Collection': [{'🌐Search Engines': [{'*🔎Google': 'https://www.google.com'}, {'🧷Bing': 'https://www.Bing.com'}]}, {'📢 Social Media': [{'💠Facebook': ['https://www.facebook.com', {'📸Instegram': 'https://www.instegram.com'}, {'✔️Whatsapp': 'https://web.whatsapp.com'}]}, {'🌀Twitter': 'https://www.twitter.com'}, {'🔻Youtube': 'https://www.youtube.com'}]}, {'📰News Sites': [{'Popular News Sites': ''}, {'🦊 FOX': 'https://www.foxnews.com'}, {'☕️ BBC': 'https://www.bbc.com/news'}, {'🏈 ESPN': 'https://www.espn.com/'}]}], 'Created By': [{'Yair Charit': [{'👨🏽\u200d💻 See some more of my work 👨🏽\u200d💻': ''}, {'*👓Portfolio': 'https://yaircharit.github.io'}, {'*💼LinkedIn': 'https://il.linkedin.com/in/yair-charit'}, {'*👷🏽\u200d♂️ Github': 'https://github.com/yaircharit'}]}]}
             // document.staticMarks will be inserted above. the line below is only for testing purposes
-			document.newsFeed = {'Happy Birthday!': 'never', 'Thanks!': '25/08/2021 14:00', 'What about me?': '20/08/2021 14:00'}
+			document.newsFeed = {'Happy Birthday!': 'never', 'Thanks!': '29/08/2021 14:00', 'What about me?': '20/08/2021 14:00'}
 
 
             news_placeholder = document.getElementById('news_placeholder')
