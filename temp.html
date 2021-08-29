@@ -74,6 +74,11 @@
             background-color: transparent;
         }
 
+        .notesButton{
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgNTEyIj48cGF0aCBkPSJNMTUxLjUgMzQ3LjhMMy41IDIwMWMtNC43LTQuNy00LjctMTIuMyAwLTE3bDE5LjgtMTkuOGM0LjctNC43IDEyLjMtNC43IDE3IDBMMTYwIDI4Mi43bDExOS43LTExOC41YzQuNy00LjcgMTIuMy00LjcgMTcgMGwxOS44IDE5LjhjNC43IDQuNyA0LjcgMTIuMyAwIDE3bC0xNDggMTQ2LjhjLTQuNyA0LjctMTIuMyA0LjctMTcgMHoiLz48L3N2Zz4=);
+            background-repeat: no-repeat;
+        }
+
         .deleteButton {
             background-color: red;
             float: left;
@@ -713,7 +718,7 @@
             else
                 temp.appendChild(createElement('button', { class: classes, onclick: 'deleteButtonClick(this)' }, 'X'))
             classes = `littleButton ${((isObj) ? 'notesButton' : '')} ${(isConst) ? 'const' : ''}`
-            temp.appendChild(createElement('button', { class: classes, onclick: 'toggleExpanded(this)' }, 'v'))
+            temp.appendChild(createElement('button', { class: classes, onclick: 'toggleExpanded(this)' }, ''))
 
             classes = `container-content title ${(temp2 != '') ? 'clickable' : ''} ${((isConst) ? 'const' : '')}`
             temp.appendChild(createElement('input', { class: classes, value: key, readonly: true, onclick: 'onTitleClick(this)', placeholder: 'Title' }, key))
@@ -852,19 +857,18 @@
     <div class="background"></div>
     <div id="topbar">
 
-        <div id="news_placeholder" class="vwrap"><img src="BW Logo.png"
-                style="height: 3em;  border-radius: 0 0 25px 25px;"></div>
+        <div id="news_placeholder" class="vwrap"></div>
 
     </div>
     <div id="placeholder"></div>
 
     <footer>
-        <div style="float:right; margin-bottom: 2em; flex-direction: column; display: none; ">
+        <div style="float:right; flex-direction: column; display: flex; ">
             <button id='interButton' class="intButton editButton" onclick='interactionButton()'>Edit</button>
             <button id="downloadButton" class="intButton saveButton"
                 onclick="downloadButtonClick()">Download</button></a>
         </div>
-        <div style="float:right; bottom: 0; flex-direction: column; display: flex; padding: 0 1em;  ">
+        <div style="float:right; bottom: 0; flex-direction: column; display: flex; padding: 1em;  ">
             <p style="margin: 0%;">Made by Yair Charit</p>
             <a href="https://github.com/yaircharit/Dashboard-Plus">Git Repository</a>
         </div>
