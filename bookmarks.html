@@ -15,7 +15,7 @@
         }
 
         .background {
-            background-image: linear-gradient(210deg, rgb(0, 158, 160),rgb(0, 82, 83),rgb(0, 85, 199),rgb(0, 182, 250));
+            background-image: linear-gradient(210deg, rgb(0, 158, 160),rgb(0, 82, 83),rgb(0, 59, 136),rgb(0, 136, 185));
             background-size: 400% 400%;
             border: 0px;
             border-radius: 0px;
@@ -25,7 +25,7 @@
             z-index: -100;
             top: 0;
             left: 0;
-            animation: gradient 15s ease infinite;
+            animation: gradient 30s ease infinite;
         }
 
         @keyframes gradient {
@@ -59,6 +59,7 @@
             color: white;
             border-radius: 50px;
             font-size: 1rem;
+            text-align-last: center;
         }
 
         .littleButton {
@@ -130,6 +131,7 @@
         .collection-container {
             /* padding: 10px; */
             margin: 1em;
+            margin-left: 2em;
         }
 
         .title {
@@ -190,12 +192,11 @@
 
         .container-content {
             font-size: 20px;
+            display: inline;
         }
 
         li {
-            /* margin-bottom: 0.1em; */
-            display: block;
-            /* width: 100%; */
+            display: inline;
             text-align: center;
             overflow: hidden;
             transition: max-height 0.2s ease-in-out;
@@ -205,9 +206,14 @@
 
         textarea {
             resize: none;
-            float: left;
-            max-width: 90%;
+            float: right;
             transition: max-height 0.2s ease-in-out;
+            font-size: 18px;
+            overflow: hidden;
+        }
+
+        [name='note']{
+            font-size: 18px;
         }
 
         input {
@@ -219,16 +225,18 @@
 
         ul {
             padding: 0;
-            display: flex;
-            flex-direction: column;
+            display: inline;
             transition: max-height 0.2s ease-in-out;
             width: -webkit-fill-available;
             height: -webkit-fill-available;
+            text-align-last: left; 
         }
 
         .note,
         .link {
-            margin-left: 1em
+            margin-left: 1em;
+            display: list-item;
+            list-style: square inside;
         }
 
         .expandable {
@@ -587,14 +595,14 @@
                             elemList[item].style.display = state
                             elemList[item].style.maxHeight = (state == 'none') ? '0px' : `${elemList[item].scrollHeight}px`
                         } else {
-                            elemList[item].style.display = (elemList[item].style.display == 'none') ? 'block' : 'none'
+                            elemList[item].style.display = (elemList[item].style.display == 'none') ? 'list-item' : 'none'
                             elemList[item].style.maxHeight = (elemList[item].style.maxHeight == '0px') ? `${elemList[item].scrollHeight}px` : '0px'
                         }
                     } else {
                         if (state != undefined) {
                             elemList[item].style.display = state
                         } else {
-                            elemList[item].style.display = (elemList[item].style.display == 'none') ? 'block' : 'none'
+                            elemList[item].style.display = (elemList[item].style.display == 'none') ? 'list-item' : 'none'
                         }
                     }
                 }
@@ -857,13 +865,14 @@
     <div class="background"></div>
     <div id="topbar">
 
-        <div id="news_placeholder" class="vwrap"></div>
+        <div id="news_placeholder" class="vwrap"><img src="BW Logo.png"
+                style="height: 3em;  border-radius: 0 0 25px 25px;"></div>
 
     </div>
     <div id="placeholder"></div>
 
     <footer>
-        <div style="float:right; flex-direction: column; display: flex; ">
+        <div style="float:right; flex-direction: column; display: none; ">
             <button id='interButton' class="intButton editButton" onclick='interactionButton()'>Edit</button>
             <button id="downloadButton" class="intButton saveButton"
                 onclick="downloadButtonClick()">Download</button></a>
@@ -874,7 +883,7 @@
         </div>
 
         <script>
-			document.staticMarks = {'Main Collection': [{'🌐Search Engines': [{'*🔎Google': 'https://www.google.com'}, {'🧷Bing': 'https://www.Bing.com'}]}, {'📢 Social Media': [{'💠Facebook': ['https://www.facebook.com', {'📸Instegram': 'https://www.instegram.com'}, {'✔️Whatsapp': 'https://web.whatsapp.com'}]}, {'🌀Twitter': 'https://www.twitter.com'}, {'🔻Youtube': 'https://www.youtube.com'}]}, {'📰News Sites': [{'Popular News Sites': ''}, {'🦊 FOX': 'https://www.foxnews.com'}, {'☕️ BBC': 'https://www.bbc.com/news'}, {'🏈 ESPN': 'https://www.espn.com/'}]}], 'Created By': [{'Yair Charit': [{'👨🏽\u200d💻 See some more of my work 👨🏽\u200d💻': ''}, {'*👓Portfolio': 'https://yaircharit.github.io'}, {'*💼LinkedIn': 'https://il.linkedin.com/in/yair-charit'}, {'*👷🏽\u200d♂️ Github': 'https://github.com/yaircharit'}]}]}
+			document.staticMarks = {'Main Collection': [{'🌐Search Engines': [{'*🔎Google': 'https://www.google.com'}, {'🧷Bing': 'https://www.Bing.com'}]}, {'📢 Social Media': [{'💠Facebook': ['https://www.facebook.com', {"All of Facebook's apps": ''}, {'📸Instegram': 'https://www.instegram.com'}, {'✔️Whatsapp': 'https://web.whatsapp.com'}]}, {'🌀Twitter': 'https://www.twitter.com'}, {'🔻Youtube': 'https://www.youtube.com'}]}, {'📰News Sites': [{'Popular News Sites': ''}, {'🦊 FOX': 'https://www.foxnews.com'}, {'☕️ BBC': 'https://www.bbc.com/news'}, {'🏈 ESPN': 'https://www.espn.com/'}]}], 'Created By': [{'Yair Charit': [{'👨🏽\u200d💻 See some more of my work 👨🏽\u200d💻': ''}, {'*👓Portfolio': 'https://yaircharit.github.io'}, {'*💼LinkedIn': 'https://il.linkedin.com/in/yair-charit'}, {'*👷🏽\u200d♂️ Github': 'https://github.com/yaircharit'}]}]}
             // document.staticMarks will be inserted above. the line below is only for testing purposes
 			document.newsFeed = {'Happy Birthday!': 'never', 'Thanks!': '29/08/2021 14:00', 'What about me?': '20/08/2021 14:00'}
 
