@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <meta name="viewport" content="height=device-height,initial-scale=1,shrink-to-fit=no" />
+    <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/movies-4/48/pokemon-movie-cinema-ball-512.png">
+    <title>SQA Dashboard</title>
+    <link rel='stylesheet' href='style.css' type='text/css' media='all' />
+    <link rel='stylesheet'
+        href='https://fonts.googleapis.com/css?family=Oswald:400,500,700%7CRoboto:400,500,700%7Croboto:400,500,700%7CQuattrocento+Sans:400,500,700'
+        type='text/css' media='all' />
+    <style>
+        #collections {
+            display: inline-flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+
+        input {
+            border: none;
+            background-color: transparent;
+            font-family: 'Quattrocento Sans';
+            font-weight: 300;
+
+        }
+
+        ul.container-body>li.item,
+        li.item-content {
+            list-style-type: none;
+        }
+
+        li.item::marker {
+            font-size: 13px;
+            color: rgb(54, 54, 54);
+        }
+
+
+
+        button {
+            border-radius: 50px;
+            text-align: center;
+        }
+
+        .little-button {
+            height: 10px;
+            width: 10px;
+            margin: 0%;
+            padding: 0 0.3em;
+            border: none;
+            border-radius: 50%;
+            color: lightgray;
+        }
+
+        .delete-button {
+            background-color: maroon;
+
+        }
+
+        .add-button {
+            background-color: rgb(131, 180, 131);
+            height: 1.5vw;
+            width: -webkit-fill-available;
+            float: left;
+            border-radius: 10px;
+            margin-top: 1vw;
+            padding: 0 1vw;
+        }
+
+        .news-button {
+            float: left;
+            margin: 1vw;
+        }
+
+        button.expand-button {
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgNTEyIj48cGF0aCBkPSJNMTUxLjUgMzQ3LjhMMy41IDIwMWMtNC43LTQuNy00LjctMTIuMyAwLTE3bDE5LjgtMTkuOGM0LjctNC43IDEyLjMtNC43IDE3IDBMMTYwIDI4Mi43bDExOS43LTExOC41YzQuNy00LjcgMTIuMy00LjcgMTcgMGwxOS44IDE5LjhjNC43IDQuNyA0LjcgMTIuMyAwIDE3bC0xNDggMTQ2LjhjLTQuNyA0LjctMTIuMyA0LjctMTcgMHoiLz48L3N2Zz4=);
+            background-repeat: no-repeat;
+            background-color: transparent;
+            float: right;
+            margin-top: 0.7rem;
+        }
+
+        div#buttons {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+        }
+
+        button#god-mode-button {
+            left: 0;
+            bottom: 0;
+            padding: 1.5vw;
+            background-color: transparent;
+            position: fixed;
+            border: none;
+            border-radius: 0;
+
+        }
+
+        button#god-mode-button:hover {
+            background-color: wheat;
+        }
+
+        .collection {
+            width: 100%;
+            padding: 2em;
+        }
+
+        .collection-title {
+            border: none;
+            font-size: 2vw;
+            color: #222222;
+            height: fit-content;
+            border-bottom: #4d906b 1px dashed;
+        }
+
+        .collection-body {
+            display: inline-flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+            margin-top: 1em;
+        }
+
+        .container {
+            margin: 0 2em;
+            width: fit-content;
+        }
+
+        .container-head {
+            border-bottom: #222222 1px dashed;
+            border-radius: 5px 5px 0 0;
+            width: fit-content;
+        }
+
+        .container-title {
+            font-size: 1.5vw;
+            color: #222222;
+            width: fit-content;
+        }
+
+        .item-title {
+            font-size: 1.2vw;
+            color: #222222;
+            font-style: italic;
+            width: -webkit-fill-available;
+        }
+
+        .item-head{
+            display: inline-flex;
+            flex-direction: row;
+            width: -webkit-fill-available;
+        }
+
+        .container-body {
+            border-radius: 0 0 5px 5px;
+            margin: 0;
+            border-top: none;
+        }
+
+        .clickable {
+            color: #455b97;
+        }
+
+        .tab-header {
+            background-color: rgb(238, 238, 238);
+            border-radius: 5px 5px 0 0;
+            margin-left: 0.5vw;
+            padding: 0 1vw;
+        }
+
+        .tab-content {
+            padding: 2vw;
+            display: inline-flex;
+            flex-direction: column;
+        }
+
+        div#news-content {
+            width: -webkit-fill-available;
+            background-color: rgb(240, 240, 240);
+            border-radius: 5px;
+        }
+
+        div#news {
+            margin: 4vw;
+            display: grid;
+        }
+
+        div#news-tabs {
+            width: -webkit-fill-available;
+            display: inline-flex;
+        }
+
+        textarea {
+            background-color: transparent;
+            border: none;
+            resize: none;
+        }
+    </style>
+    <script>
+        const TEXTAREA_WIDTH = 40
+
+        var reg = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+        var bookmarks = [{ '': [{ 'Useful Linksss': [{ '📳 Guest WiFi': 'http://guestpass.jnj.com/' }, { '🔄 Restore Studies': 'file://L:\\Testing\\AT\\Restore Test Backups\\RestoreTestData' }, { '📕 Defects Opening Site': ['https://jnj.sharepoint.com/teams/DefectsOpening', 'Maintained by Aviram'] }, { '⏳  חילנט': 'https://matrix.net.hilan.co.il/login' }, { '🥡  Cibus': 'https://www.mysodexo.co.il/new_rest.aspx?fav=0&ta=0&weekend=&grp=112838.11&addr=1000261203&h=10&m=2&rp=100&s=135' }, { '💻 IT Ticket': ['https://jnjprod.service-now.com/iris?id=irisgl_cat_item&sys_id=45c1ff5cdbb50b44a0737a8eaf961960', { 'Permission Request': 'https://jnjprod.service-now.com/iris?id=irisgl_kb_article&sys_id=5b31cb67dbf34450fd52a39b13961956&table=kb_knowledge' }, { 'IT Guidelines': 'https://jnj-my.sharepoint.com/:p:/p/eyonai_its/EWqKzassg4hFhH7yeIHenmwBn3QFckhKT0EPw3yTgYU4TA?e=FskZhy' }] }, { '📦 Equipment Site': ['https://jnj.sharepoint.com/teams/htcintranethome/QARA/sqa2/SQA_Equipment', { 'Equipment RF Tags Finder': ['http://bwiiltirfid:8815/admin/login#/maps/', '👆 User and Passowrd - SQA'] }] }, { '📞 Telephone Book': 'https://jnj.sharepoint.com/teams/htcintranethome/ScreenTV/projects/PhoneBook.aspx' }, { '📂 Testing Folder': 'L:/Testing' }] }, { 'Biosense SQA': [{ '🐱\u200d💻 HTC SharePoint': 'https://jnj.sharepoint.com/teams/htcintranethome/SitePages/Home.aspx' }, { '✅ ComplianceWire': 'https://www.compliancewire.com/Secure/Custom/HCCPSSOLoginSupport.aspx' }, { '📃 Agile': 'http://bwiiltiagileap1.eu.jnj.com:8001/Agile/' }, { '🙄 CDR': 'https://cdr.jnj.com/' }, { '📇 Catheter Catalog': 'http://itsusrawsp10939.jnj.com/partnolookup/Default.aspx' }] }, { 'Knowledge and Training': [{ '📚  Welcome Guide': 'file://L:/Testing/Matrix/Welcome guide/Welcome Guide - Matrix SQA.pdf' }, { '👶🏻 Goals Dashboard': ['file://L:/Testing/Matrix/2021 Goals Dashboard.xlsx', 'This file is Read Only, you will need to save a local copy of your own in order to edit it. Maintained by Shoham Lebel.'] }, { '🎽 Training Request Form': 'https://forms.office.com/r/iEwUWpupca' }, { '🏫 Training Queue': 'https://jnj-my.sharepoint.com/:x:/p/slebel_its/EfDgDauE_z1BtInZkQ8p9ZgBGgDZNTPjZB37ESHvQd-djA?e=HPPgug' }, { '👩\u200d💼 Feature Leader List 👨\u200d💼': ['https://jnj.sharepoint.com/teams/RDSQAFeatureLeaderList', 'Maintained by Nadav Carmi'] }] }, { 'Projects': [{ '💠 Version Folder': ['file://L:\\Artifacts\\Carto3', { 'V6': 'file://L:\\Artifacts\\Carto3\\V6' }, { 'V7': 'file://L:\\Artifacts\\Carto3\\V7' }, { 'v7.5': 'file://L:\\Artifacts\\Carto3\\V8' }] }, { '🐞 Bug Folder': ['', { 'V6': 'file://L:\\Products\\CARTO 3 V6\\Bugs' }, { 'V7': 'file://L:\\Products\\CARTO 3 V7\\Bugs' }, { 'v7.5': 'file://L:\\Projects\\CARTO 3 V8\\Bugs\\' }] }, { '📤 Carto Released Versions': 'file://L:\\SW_Versions\\CARTO3 - ReleasedVersions' }, { '🏋️\u200d♀️ Performance Logs Folder 🏋️\u200d': 'file://L:\\Carto_Db\\PerformanceLogs' }, { '📆 Calendar': 'file://L:\\Testing\\Team Leader SQA\\Calendar 2021.xlsx' }] }, { 'Dashboards': [{ '🔥 Knowledge Base Dashboard': 'file:///L:/Testing/Matrix/The%20new%20knowledge%20base/SQABoardSite/home.html' }, { '8️⃣ v7.5': 'http://bwiiltiadotfs:8080/tfs/BiosenseCollection/Carto3/_dashboards/dashboard/df2e3415-6302-4a1a-99c7-398cb048d806' }, { '👴 Matrix Dashboard (jnj.com)': 'file://L:\\Testing\\Matrix\\Matrix Dashboard\\Old - Production\\index.html' }] }] }, { 'Tools': [{ 'Released Tools': [{ 'Tools You can use in V&V': '' }, { '🔬 Beyond Compare': 'file://L:\\Testing\\Tools\\Beyond Compare 3' }, { '💽 Fill Drive': ['file://L:\\Testing\\Tools\\FillDrive', 'A tool for creating a desired amount of data in folders. Mainly used for stress tesing the system with low available disk space.'] }, { '🧥 MITM': ['file://L:\\Testing\\Tools\\MITM', 'A tool for emulating and affecting ECG signals with realtime data. Used for advanced features testing such as ARA, IC Patterns, etc...'] }, { '🔁 Simulators Folder': 'L:\\Testing\\Matrix\\Buddies Training\\Training for Trainees\\Knowledge Base\\Simulators' }] }, { 'Carto Tools': [{ '⚙ Tools Folder': ['file://L:\\Testing\\Tools', 'You might find something usefull!'] }, { '💪 Performance Tool': ['file://L:\\Testing\\Tools\\Performance Monitoring Tool', 'Maintained by AT team, used for monitoring perfomance and behavior in Carto.'] }, { '🏸 Workstation Tester': ['file://L:\\Testing\\Tools\\WorkstationTester', 'A tool for finding the CFI of a Workstations. Maintained by AT team.'] }, { '🐱\u200d🐉 Ranorex': 'L:\\Testing\\Tools\\Ranorex' }, { '🦋 Bug Assistant': ['file://L:\\Testing\\Tools\\Bug Recording Assistant', 'A tool that shows what actions are being performed with the keyboard and mouse. Useful for creating clearer screen recordings for defects.'] }, { '🖥️ Logs Software': 'file://L:\\Testing\\KnowledgeBase\\CART' }] }, { 'Work Tools': [{ '⭐ Path Copy Copy': ['https://pathcopycopy.github.io/', 'Recommended! A tool to copy UNC paths (Copy a path with file://L:\\ instead of L:\\ for defects in VSTS)'] }, { '⏩ Auto Baseline': ['file://L:\\Testing\\Matrix\\Eran Yonai\\Auto Baseline', 'A tool for filling Baseline After equipment information and genertaing a Baseline text accordingly. Maintained by Eran Yonai.'] }, { '🎯 SQA Tools (NOT FOR V&V)': ['file://L:\\Testing\\Matrix\\Eran Yonai\\SQA_Tool', 'For auto inserting Licenses into Carto. Maintaind by Eran Yonai.'] }, { '📊 Auto Excel Tool': ['file://L:\\Testing\\Tools\\AutoExcelTool', 'Organize your Excel STD files.'] }, { '🔓 Carto Decryptor': ['file://L:\\Testing\\Tools\\CARTO_Decryptor_Tool_1.0.0.13', { 'Alternate link inside R&D folder': 'file://L:\\R&D\\SW\\Utils\\CartoDecryptor\\UI_1.0.0.13' }, 'For decrypting and opening archives created in Carto.'] }] }] }]
+        var news = [{ title: 'news1', content: 'n1c', startsAt: '01/01/2900; 12:00:00', endsAt: '' }, { title: 'news2', content: 'n2c', startsAt: '01/01/2900; 12:00:00', endsAt: '01/01/3900; 12:00:00' }, { title: 'news3', content: 'n3c', startsAt: '01/01/2900; 12:00:00', endsAt: 'never' }, { title: 'news4', content: 'n4c', startsAt: '', endsAt: '01/01/1900; 13:00:00' }, { title: 'news5', content: 'n5c', startsAt: '', endsAt: '01/01/2900; 12:00:00' }, { title: 'news6', content: 'n6c', startsAt: '', endsAt: 'never' }]
+
+        var e = 'keyup,keypress,focus,blur,change'.split(',');
+        function createElement(element, attribute, inner) {
+            if (typeof (element) === "undefined") {
+                return false;
+            }
+            if (typeof (inner) === "undefined") {
+                inner = "";
+            }
+            var el = document.createElement(element);
+            if (typeof (attribute) === 'object') {
+                for (var key in attribute) {
+                    el.setAttribute(key, attribute[key]);
+                }
+            }
+
+            if (!Array.isArray(inner)) {
+                inner = [inner];
+            }
+
+            for (var k = 0; k < inner.length; k++) {
+                if (inner[k].tagName) {
+                    el.appendChild(inner[k]);
+                } else {
+                    el.appendChild(document.createTextNode(inner[k]));
+                }
+            }
+            if (element == 'input' && (el.classList.contains('collection-title') || el.classList.contains('tab-title'))) {
+                addResizeFunc(el)
+            }
+            return el;
+        }
+
+        function addResizeFunc(input_element) {
+            function fitSize() {
+                input_element.style.width = `${((input_element.value.length == 0) ? input_element.placeholder.length : input_element.value.length)}vw`
+            }
+            fitSize(input_element)
+            for (var i in e) input_element.addEventListener(e[i], fitSize, false);
+        }
+
+        function add(obj, json_obj = undefined) {
+            let func = ((obj instanceof CollectionContainer) ? ((obj, json) => { return new Collection(obj, json) }) : ((obj instanceof Collection) ? (obj, json) => { return new Container(obj, json) } : (obj, json) => { return new Item(obj, json) }))
+            let temp = (json_obj != undefined) ? func(obj, json_obj) : func(obj)
+            obj.body.push(temp)
+            obj.HTML.body.main.appendChild(temp.HTML.main)
+        }
+
+        function remove(obj) {
+            obj.parent.body = obj.parent.body.filter((el) => { return el != obj })
+            obj.parent.HTML.body.main.removeChild(obj.HTML.main)
+            delete obj
+        }
+        function generateAddButton(obj) {
+            obj.HTML.body.addButton = createElement('button', { class: 'little-button add-button' }, '+')
+            obj.HTML.body.addButton.onclick = () => {
+                obj.HTML.body.main.removeChild(obj.HTML.body.center)
+                add(obj)
+                obj.HTML.body.main.appendChild(obj.HTML.body.center)
+            }
+            obj.HTML.body.addButton.hidden = !editMode
+            // obj.HTML.body.center = createElement('center', {}, obj.HTML.body.addButton)
+            obj.HTML.body.main.appendChild(obj.HTML.body.addButton)
+        }
+
+        function generateHead(obj) {
+            obj.HTML.head = {}
+            let obj_type = obj.constructor.name.toLowerCase()
+            obj.HTML.head.main = createElement('div', { class: obj_type + '-head' })
+
+            obj.HTML.head.deleteButton = createElement('button', { class: 'little-button delete-button' })
+            obj.HTML.head.deleteButton.onclick = () => { remove(obj) }
+            obj.HTML.head.deleteButton.hidden = !editMode;
+
+            obj.HTML.head.title = createElement('input', { class: obj_type + '-title', value: obj.title, readonly: true },)
+            obj.HTML.head.title.readOnly = !editMode;
+
+            if (obj_type == 'item') {
+                obj.HTML.head.expandButton = createElement('button', { class: 'little-button expand-button' })
+                obj.HTML.head.expandButton.hidden = !editMode && obj.body.length == 0;
+                obj.HTML.head.expandButton.onclick = () => { obj.toggleExpand() }
+                obj.HTML.head.title.onclick = () => { obj.titleClicked(); }
+                if (obj.url != '')
+                    obj.HTML.head.title.classList.add('clickable')
+            }
+
+            for (let name in obj.HTML.head)
+                if (name != 'main')
+                    obj.HTML.head.main.appendChild(obj.HTML.head[name])
+        }
+
+        function generateBody(obj, json_obj) {
+            obj.HTML.body = {}
+            obj.body = []
+            let obj_type = obj.constructor.name.toLowerCase()
+            let elem_type = (obj_type == 'collection') ? 'div' : 'ul'
+
+            obj.HTML.body.main = createElement(elem_type, { class: obj_type + '-body' })
+            if (obj_type == 'item') {
+                obj.url = Object.values(json_obj)[0]
+                if (obj.url instanceof Array)
+                    obj.url = obj.url[0]
+                obj.HTML.body.url = createElement('input', { class: 'item-url', value: obj.url, readonly: true },)
+                obj.HTML.body.url.style.display = (editMode)? 'block': 'none'
+                obj.HTML.body.main.hidden = true
+                obj.HTML.body.main.appendChild(createElement('li', { class: 'item-content' }, obj.HTML.body.url))
+            }
+
+            json_obj = json_obj[obj.title]
+            for (let i in json_obj) {
+                if (json_obj[i] instanceof Object) {
+                    add(obj, json_obj[i])
+                }
+            }
+            generateAddButton(obj)
+
+        }
+
+        function generateHTML(obj, json) {
+            obj.HTML = {}
+            let obj_type = obj.constructor.name.toLowerCase()
+            let elem_type = (obj_type == 'item') ? 'li' : 'div'
+            obj.title = Object.keys(json)[0]
+            if (obj.title.startsWith('*')) {
+                obj.immutable = true
+                obj.title = obj.title.substr(1)
+            } else obj.immutable = false;
+
+            obj.HTML.main = createElement(elem_type, { class: obj_type })
+
+            generateBody(obj, json)
+            generateHead(obj)
+
+            obj.HTML.main.appendChild(obj.HTML.head.main)
+            obj.HTML.main.appendChild(obj.HTML.body.main)
+        }
+
+        function toggleEditMode(obj) {
+            obj.HTML.head.deleteButton.hidden = !editMode
+            obj.HTML.head.title.readOnly = !editMode
+            obj.HTML.body.addButton.hidden = !editMode
+            if (!editMode)
+                obj.title = obj.HTML.head.title.value
+
+            if (obj.constructor.name == 'Item') {
+                obj.HTML.head.expandButton.hidden = !editMode && obj.body.length == 0;
+                if (!editMode)
+                    obj.url = obj.HTML.body.url.value
+                obj.HTML.body.url.style.display = (editMode)? 'block': 'none'
+                obj.HTML.body.url.readOnly = !editMode
+            }
+
+            for (let i in obj.body) { toggleEditMode(obj.body[i]) }
+        }
+
+        function download() {
+            let fullHTML = document.documentElement.innerHTML
+            let head = fullHTML.substr(0, fullHTML.search('<bo' + 'dy>'))
+            head = head.replace(/\s*var bookmarks = \[.*\n/g, '\n\t\tvar ' + `bookmarks = ${JSON.stringify(bookmarks)}\n`)
+            head = head.replace(/\s*var news = \[.*\n/g, '\n\t\tvar ' + `news = ${JSON.stringify(news)}\n`)
+            let header = '<header id="masthead" class="site-header"><div class="site-branding"><h1 class="site-title"><a href="home.html" rel="home">SQA</a></h1><h3 class="site-description">SQA Knowledge Dashboard</br><sup><font color="#7B7B7B" style="font-size:110%;">For Internal Use Only &copy;</font></sup></h3></div><nav id="site-navigation" class="main-navigation"><button class="menu-toggle">Menu</button><a class="skip-link screen-reader-text" href="#content">Skip to content</a><div class="menu-menu-1-container"><ul id="menu-menu-1" class="menu"><li><a href="sqa_school.html">SQA School</a></li><li><a href="SQA_Basics.html">SQA Basics</a></li><li><a href="sw_school.html">SW SCHOOL</a></li><li><a href="BW1.html">BW1</a></li><li><a href="Carto_V7.html">Carto V7</a></li><li><a href="Carto_V8.html">Carto V7.5</a></li><li><a href="nGEN.html">nGEN</a></li><!--<li><a href="trudi.html">Trudi</a></li>--><li><a target="blank" href="bookmarks.html"></a><font color="#7B7B7B">SQA Dashboard</font></a></li></ul></div></nav></header>'
+            let body = '<bo' + 'dy>' + header + '<div id="news"><div id="news-tabs"></div><div id="news-content"></div></div><div id="collections"></div>'
+            let footer = fullHTML.substr(fullHTML.search('<foo' + 'ter>')) + ''
+            let res = `<!DOCTYPE html><html lang="en">${head}${body}${footer}</html>`
+
+            var element = document.createElement('a');
+            element.setAttribute('href', `data:text/html;charset=utf-8,${encodeURIComponent(res)}`);
+            element.setAttribute('download', 'SQADashboard.html');
+            element.click();
+        }
+
+        var editMode = false;
+        class CollectionContainer {
+            constructor(json_colls = [{ 'New Collection': [] }], main_HTML_ID = 'collections', edit_button_ID = 'edit-button') {
+                this.body = []
+                this.HTML = { body: {} }
+                this.HTML.body.main = document.getElementById(main_HTML_ID)
+
+                for (let i in json_colls) {
+                    add(this, json_colls[i])
+                }
+
+                generateAddButton(this)
+            }
+
+            toggleEditMode() {
+                for (let col in this.body) { toggleEditMode(this.body[col]); }
+                this.HTML.body.addButton.hidden = !editMode
+                // if (!editMode) { bookmarks = this.JSON }
+            }
+
+
+
+            get JSON() {
+                let temp = []
+                for (let i in this.body) temp.push(this.body[i].JSON)
+                return temp;
+            }
+        }
+
+        class Collection {
+            constructor(parent, json_coll = { 'New Collection': [] }) {
+                this.parent = parent
+                generateHTML(this, json_coll)
+                this.HTML.main.appendChild(createElement('hr'))
+            }
+
+            get JSON() {
+                let temp = {}
+                temp[`${this.title}`] = []
+                for (let i in this.body) temp[`${this.title}`].push(this.body[i].JSON)
+                return temp;
+            }
+        }
+
+        class Container {
+            constructor(parent, json_cont = { 'New Container': '' }) {
+                this.parent = parent
+                generateHTML(this, json_cont)
+            }
+
+            get JSON() {
+                let temp = {}
+                temp[`${this.title}`] = []
+                for (let i in this.body) temp[`${this.title}`].push(this.body[i].JSON)
+                return temp;
+            }
+        }
+
+        class Item {
+            constructor(parent, json_item = { 'New Item': ['Empty URL'] }) {
+                this.parent = parent;
+                this.expanded = false;
+                generateHTML(this, json_item)
+            }
+
+            toggleExpand() {
+                this.HTML.body.main.hidden = this.expanded
+                this.expanded = !this.expanded
+                this.HTML.body.addButton.hidden = !(this.expanded && editMode)
+            }
+
+            static webFileTypesRegEx = '(https://|https:\\\\|https://|http:\\\\).*|.*(\.pdf)'
+            titleClicked() {
+                let dir = this.url
+                if (!editMode && this.url != '') {
+                    if (this.url.match(Item.webFileTypesRegEx)) {
+                        window.open(this.url, '_blank')
+                    } else {
+                        navigator.clipboard.writeText(this.url).then(function () {
+                            alert(`${dir} was copied to your clipboard.\nTo open press Winkey+R, Winkey+V, Enter `)
+                        }, function () {
+                            alert('ERROR\nPlease try again')
+                        })
+                    }
+                }
+            }
+
+            get JSON() {
+                let temp = {}
+                temp[`${this.title}`] = [this.url]
+                for (let i in this.body) temp[`${this.title}`].push(this.body[i].JSON)
+                return temp;
+            }
+        }
+
+        class NewsFeed {
+
+            constructor(main_HTML_ID = 'news') {
+                this.HTML = {
+                    main: document.getElementById(main_HTML_ID),
+                    tabs: document.getElementById(`${main_HTML_ID}-tabs`),
+                    content: document.getElementById(`${main_HTML_ID}-content`),
+                    addButton: createElement('button', { class: 'little-button add-button news-button' }),
+                    addTab: createElement('div', { class: 'tab-header' })
+                }
+                this.body = []
+                this.count = 0
+
+                this.HTML.addButton.onclick = () => { this.add() }
+                this.HTML.addTab.appendChild(this.HTML.addButton);
+                this.HTML.addTab.hidden = !editMode
+                this.HTML.tabs.appendChild(this.HTML.addTab)
+
+                for (let i in news) {
+                    this.add(news[i])
+                }
+                this.displayFirst()
+            }
+
+            add(json = { title: '', content: '', startsAt: '', endsAt: 'never' }) {
+                let newsItem = new NewsItem(this, json)
+                this.clearBodyView()
+                this.body.push(newsItem);
+                this.HTML.tabs.appendChild(newsItem.HTML.head);
+                this.HTML.content.appendChild(newsItem.HTML.body);
+            }
+
+            clearBodyView() {
+                for (let item in this.body) {
+                    this.body[item].HTML.body.style.display = 'none'
+                }
+            }
+
+            toggleEditMode() {
+                this.HTML.addTab.hidden = !editMode
+                for (let item in this.body) {
+                    this.body[item].toggleEditMode()
+                }
+                this.displayFirst()
+            }
+
+            remove(newsItem) {
+                this.HTML.tabs.removeChild(newsItem.HTML.head)
+                this.HTML.content.removeChild(newsItem.HTML.body)
+                this.body = this.body.filter((item) => { return item != newsItem })
+
+                this.displayFirst()
+            }
+
+            displayFirst() {
+                this.clearBodyView()
+                for (let i in this.body) {
+                    if (editMode || (this.body[i].startsAt < now && (this.body[i].endsAt == 'never' || now < new Date(this.body[i].endsAt)))) {
+
+                        this.body[i].HTML.head.style.display = 'block'
+                        this.body[i].HTML.body.style.display = 'block'
+                        return;
+                    }
+                }
+            }
+
+            get JSON() {
+                let res = []
+                let temp;
+
+                now = new Date()
+                for (let item in this.body) {
+                    temp = this.body[item].JSON
+                    if (temp.endsAt == 'never' || now < new Date(temp.endsAt))
+                        res.push(temp)
+                }
+                return res
+            }
+        }
+        var now = new Date()
+
+        class NewsItem {
+            constructor(parent, json = { title: '', content: '', startsAt: '', endsAt: 'never' }) {
+                this.parent = parent
+                this.title = json.title
+                this.body = json.content
+                this.id = NewsItem.count++
+                this.startsAt = stringToDate(json.startsAt)
+                this.endsAt = (json.endsAt != '') ? json.endsAt : 'never'
+
+                this.HTML = {
+                    head: createElement('div', { class: 'tab-header' }),
+                    title: createElement('input', { class: 'tab-title', 'data-tab-id': `news${this.id}`, placeholder: 'Empty title', value: this.title }),
+                    deleteButton: createElement('button', { class: 'little-button delete-button news-button' },),
+
+                    body: createElement('div', { class: 'tab-content', id: `news${this.id}` }),
+                    content: createElement('textarea', { readOnly: editMode, placeholder: 'Empty News' }, this.body),
+                    dateDiv: createElement('div', { id: `news${this.id}-dates` }),
+                    start: createElement('input', { id: `news${this.id}-start`, class: 'date-input', placeHolder: 'YYYY-MM-DD; HH:MM', value: `${dateToString(this.startsAt)}` }),
+                    end: createElement('input', { id: `news${this.id}-end`, class: 'date-input', placeHolder: 'YYYY-MM-DD; HH:MM', value: this.endsAt })
+                }
+                this.HTML.deleteButton.hidden = !editMode;
+                this.HTML.title.readOnly = !editMode;
+                this.HTML.content.readOnly = !editMode;
+                this.HTML.dateDiv.hidden = !editMode
+                this.HTML.body.appendChild(this.HTML.content)
+                this.HTML.dateDiv.appendChild(createElement('label', { for: `news${this.id}-start` }, 'Starts At:'))
+                this.HTML.dateDiv.appendChild(this.HTML.start);
+                this.HTML.dateDiv.appendChild(createElement('label', { for: `news${this.id}-end` }, 'Ends At:'))
+                this.HTML.dateDiv.appendChild(this.HTML.end);
+
+                this.HTML.body.appendChild(this.HTML.dateDiv)
+                this.HTML.head.appendChild(this.HTML.deleteButton)
+                this.HTML.head.appendChild(this.HTML.title)
+                this.HTML.title.onclick = () => { this.onTabClick() }
+                this.HTML.deleteButton.onclick = () => { this.parent.remove(this) }
+
+                this.HTML.head.style.display = (editMode || (this.startsAt.getTime() <= now.getTime() && (this.endsAt == 'never' || now.getTime() <= stringToDate(this.endsAt).getTime()))) ? 'block' : 'none'
+                this.HTML.body.style.display = (editMode || (this.startsAt.getTime() <= now.getTime() && (this.endsAt == 'never' || now.getTime() <= stringToDate(this.endsAt).getTime()))) ? 'block' : 'none'
+
+            }
+
+            onTabClick() {
+                this.parent.clearBodyView()
+                this.HTML.body.style.display = 'block';
+            }
+
+            toggleEditMode() {
+                this.HTML.deleteButton.hidden = !editMode
+                this.HTML.title.readOnly = !editMode
+                this.title = this.HTML.title.value
+                this.HTML.content.readOnly = !editMode
+                this.body = this.HTML.content.value
+                this.HTML.dateDiv.style.display = (editMode) ? 'block' : 'none'
+                this.startsAt = stringToDate(this.HTML.start.value)
+                this.endsAt = this.HTML.end.value
+
+                this.HTML.head.style.display = (editMode || (this.startsAt <= now && (this.endsAt == 'never' || now.getTime() <= stringToDate(this.endsAt).getTime()))) ? 'block' : 'none'
+                this.HTML.body.style.display = (editMode || (this.startsAt <= now && (this.endsAt == 'never' || now.getTime() <= stringToDate(this.endsAt).getTime()))) ? 'block' : 'none'
+            }
+
+            get JSON() {
+                return {
+                    title: this.title,
+                    content: this.body,
+                    startsAt: dateToString(this.startsAt),
+                    endsAt: this.endsAt
+                }
+            }
+        }
+        NewsItem.count = 0
+
+        function editButtonClick(coll_container, news) {
+            editMode = !editMode
+            news.toggleEditMode()
+            coll_container.toggleEditMode()
+            editButton.innerHTML = (editMode) ? 'Save' : 'Edit';
+        }
+
+        function godButtonClick() {
+            buttonsDiv.style.display = (buttonDiv.style.display == 'none') ? 'block' : 'none';
+        }
+
+        function stringToDate(strObj) {
+            if (strObj == '') {
+                let temp = new Date()
+                temp.setMinutes(temp.getMinutes() - 1)
+                return temp;
+            }
+            if (strObj == 'never')
+                return null;
+            strObj = strObj.split('; ')
+            let dateStrObj = strObj[0].split('/').map((elem) => { return parseInt(elem) })
+            let timeStrObj = strObj[1].split(':').map((elem) => { return parseInt(elem) })
+            return new Date(dateStrObj[2], dateStrObj[1], dateStrObj[0], timeStrObj[0], timeStrObj[1], timeStrObj[2])
+        }
+
+        function dateToString(dateObj) {
+            let temp = [dateObj.getDate(), dateObj.getMonth(), dateObj.getFullYear(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds()].map((elem)=>{return ((elem <= '9')? "0": "")+elem})
+            return `${temp[0]}/${temp[1]}/${temp[2]}; ${temp[3]}:${temp[4]}:${temp[5]}`
+        }
+
+    </script>
+</head>
+
+<body>
+    <header id="masthead" class="site-header">
+        <div class="site-branding">
+            <h1 class="site-title"><a href="home.html" rel="home">SQA</a></h1>
+            <h3 class="site-description">SQA Knowledge Dashboard</br><sup>
+                    <font color="#7B7B7B" style="font-size:110%;">For Internal Use Only &copy;</font>
+                </sup></h3>
+        </div>
+        <nav id="site-navigation" class="main-navigation">
+            <button class="menu-toggle">Menu</button>
+            <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+            <div class="menu-menu-1-container">
+                <ul id="menu-menu-1" class="menu">
+                    <li><a href="sqa_school.html">SQA School</a></li>
+                    <li><a href="SQA_Basics.html">SQA Basics</a></li>
+                    <li><a href="sw_school.html">SW SCHOOL</a></li>
+                    <li><a href="BW1.html">BW1</a></li>
+                    <li><a href="Carto_V7.html">Carto V7</a></li>
+                    <li><a href="Carto_V8.html">Carto V7.5</a></li>
+                    <li><a href="nGEN.html">nGEN</a></li>
+                    <!--<li><a href="trudi.html">Trudi</a></li>-->
+                    <li><a target="blank" href="bookmarks.html"></a>
+                        <font color="#7B7B7B">SQA Dashboard</font></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div id='news'>
+        <div id="news-tabs"></div>
+        <div id="news-content"></div>
+    </div>
+    <div id="collections"></div>
+    <footer>
+        <div id="buttons" style="display: none; float:right; flex-direction: column; ">
+            <button id='edit-button' class="intButton editButton" onclick="editButtonClick(cc,newsObj)">Edit</button>
+            <button id="download-button" class="intButton saveButton"
+                onclick="bookmarks = cc.JSON; news = newsObj.JSON; download()">Download</button></a>
+        </div>
+        <button id='god-mode-button'
+            onclick='buttonsDiv.style.display = (document.getElementById("buttons").style.display == "none")? "block": "none";'></button>
+    </footer>
+    <script>
+        var buttonsDiv = document.getElementById('buttons')
+        var editButton = document.getElementById('edit-button')
+        var downloadButton = document.getElementById('download-button')
+        let cc = new CollectionContainer(bookmarks, 'collections')
+        let newsObj = new NewsFeed('news')
+    </script>
+</body>
+
+</html>
