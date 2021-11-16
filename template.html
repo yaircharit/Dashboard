@@ -102,6 +102,10 @@
             background-color: wheat;
         }
 
+        button:disabled{
+            background-color: gray;
+        }
+
         .collection {
             width: 100%;
             padding: 2em;
@@ -203,7 +207,7 @@
         const TEXTAREA_WIDTH = 40
 
         var reg = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-        var bookmarks = [{ '': [{ 'Useful Linksss': [{ '📳 Guest WiFi': 'http://guestpass.jnj.com/' }, { '🔄 Restore Studies': 'file://L:\\Testing\\AT\\Restore Test Backups\\RestoreTestData' }, { '📕 Defects Opening Site': ['https://jnj.sharepoint.com/teams/DefectsOpening', 'Maintained by Aviram'] }, { '⏳  חילנט': 'https://matrix.net.hilan.co.il/login' }, { '🥡  Cibus': 'https://www.mysodexo.co.il/new_rest.aspx?fav=0&ta=0&weekend=&grp=112838.11&addr=1000261203&h=10&m=2&rp=100&s=135' }, { '💻 IT Ticket': ['https://jnjprod.service-now.com/iris?id=irisgl_cat_item&sys_id=45c1ff5cdbb50b44a0737a8eaf961960', { 'Permission Request': 'https://jnjprod.service-now.com/iris?id=irisgl_kb_article&sys_id=5b31cb67dbf34450fd52a39b13961956&table=kb_knowledge' }, { 'IT Guidelines': 'https://jnj-my.sharepoint.com/:p:/p/eyonai_its/EWqKzassg4hFhH7yeIHenmwBn3QFckhKT0EPw3yTgYU4TA?e=FskZhy' }] }, { '📦 Equipment Site': ['https://jnj.sharepoint.com/teams/htcintranethome/QARA/sqa2/SQA_Equipment', { 'Equipment RF Tags Finder': ['http://bwiiltirfid:8815/admin/login#/maps/', '👆 User and Passowrd - SQA'] }] }, { '📞 Telephone Book': 'https://jnj.sharepoint.com/teams/htcintranethome/ScreenTV/projects/PhoneBook.aspx' }, { '📂 Testing Folder': 'L:/Testing' }] }, { 'Biosense SQA': [{ '🐱\u200d💻 HTC SharePoint': 'https://jnj.sharepoint.com/teams/htcintranethome/SitePages/Home.aspx' }, { '✅ ComplianceWire': 'https://www.compliancewire.com/Secure/Custom/HCCPSSOLoginSupport.aspx' }, { '📃 Agile': 'http://bwiiltiagileap1.eu.jnj.com:8001/Agile/' }, { '🙄 CDR': 'https://cdr.jnj.com/' }, { '📇 Catheter Catalog': 'http://itsusrawsp10939.jnj.com/partnolookup/Default.aspx' }] }, { 'Knowledge and Training': [{ '📚  Welcome Guide': 'file://L:/Testing/Matrix/Welcome guide/Welcome Guide - Matrix SQA.pdf' }, { '👶🏻 Goals Dashboard': ['file://L:/Testing/Matrix/2021 Goals Dashboard.xlsx', 'This file is Read Only, you will need to save a local copy of your own in order to edit it. Maintained by Shoham Lebel.'] }, { '🎽 Training Request Form': 'https://forms.office.com/r/iEwUWpupca' }, { '🏫 Training Queue': 'https://jnj-my.sharepoint.com/:x:/p/slebel_its/EfDgDauE_z1BtInZkQ8p9ZgBGgDZNTPjZB37ESHvQd-djA?e=HPPgug' }, { '👩\u200d💼 Feature Leader List 👨\u200d💼': ['https://jnj.sharepoint.com/teams/RDSQAFeatureLeaderList', 'Maintained by Nadav Carmi'] }] }, { 'Projects': [{ '💠 Version Folder': ['file://L:\\Artifacts\\Carto3', { 'V6': 'file://L:\\Artifacts\\Carto3\\V6' }, { 'V7': 'file://L:\\Artifacts\\Carto3\\V7' }, { 'v7.5': 'file://L:\\Artifacts\\Carto3\\V8' }] }, { '🐞 Bug Folder': ['', { 'V6': 'file://L:\\Products\\CARTO 3 V6\\Bugs' }, { 'V7': 'file://L:\\Products\\CARTO 3 V7\\Bugs' }, { 'v7.5': 'file://L:\\Projects\\CARTO 3 V8\\Bugs\\' }] }, { '📤 Carto Released Versions': 'file://L:\\SW_Versions\\CARTO3 - ReleasedVersions' }, { '🏋️\u200d♀️ Performance Logs Folder 🏋️\u200d': 'file://L:\\Carto_Db\\PerformanceLogs' }, { '📆 Calendar': 'file://L:\\Testing\\Team Leader SQA\\Calendar 2021.xlsx' }] }, { 'Dashboards': [{ '🔥 Knowledge Base Dashboard': 'file:///L:/Testing/Matrix/The%20new%20knowledge%20base/SQABoardSite/home.html' }, { '8️⃣ v7.5': 'http://bwiiltiadotfs:8080/tfs/BiosenseCollection/Carto3/_dashboards/dashboard/df2e3415-6302-4a1a-99c7-398cb048d806' }, { '👴 Matrix Dashboard (jnj.com)': 'file://L:\\Testing\\Matrix\\Matrix Dashboard\\Old - Production\\index.html' }] }] }, { 'Tools': [{ 'Released Tools': [{ 'Tools You can use in V&V': '' }, { '🔬 Beyond Compare': 'file://L:\\Testing\\Tools\\Beyond Compare 3' }, { '💽 Fill Drive': ['file://L:\\Testing\\Tools\\FillDrive', 'A tool for creating a desired amount of data in folders. Mainly used for stress tesing the system with low available disk space.'] }, { '🧥 MITM': ['file://L:\\Testing\\Tools\\MITM', 'A tool for emulating and affecting ECG signals with realtime data. Used for advanced features testing such as ARA, IC Patterns, etc...'] }, { '🔁 Simulators Folder': 'L:\\Testing\\Matrix\\Buddies Training\\Training for Trainees\\Knowledge Base\\Simulators' }] }, { 'Carto Tools': [{ '⚙ Tools Folder': ['file://L:\\Testing\\Tools', 'You might find something usefull!'] }, { '💪 Performance Tool': ['file://L:\\Testing\\Tools\\Performance Monitoring Tool', 'Maintained by AT team, used for monitoring perfomance and behavior in Carto.'] }, { '🏸 Workstation Tester': ['file://L:\\Testing\\Tools\\WorkstationTester', 'A tool for finding the CFI of a Workstations. Maintained by AT team.'] }, { '🐱\u200d🐉 Ranorex': 'L:\\Testing\\Tools\\Ranorex' }, { '🦋 Bug Assistant': ['file://L:\\Testing\\Tools\\Bug Recording Assistant', 'A tool that shows what actions are being performed with the keyboard and mouse. Useful for creating clearer screen recordings for defects.'] }, { '🖥️ Logs Software': 'file://L:\\Testing\\KnowledgeBase\\CART' }] }, { 'Work Tools': [{ '⭐ Path Copy Copy': ['https://pathcopycopy.github.io/', 'Recommended! A tool to copy UNC paths (Copy a path with file://L:\\ instead of L:\\ for defects in VSTS)'] }, { '⏩ Auto Baseline': ['file://L:\\Testing\\Matrix\\Eran Yonai\\Auto Baseline', 'A tool for filling Baseline After equipment information and genertaing a Baseline text accordingly. Maintained by Eran Yonai.'] }, { '🎯 SQA Tools (NOT FOR V&V)': ['file://L:\\Testing\\Matrix\\Eran Yonai\\SQA_Tool', 'For auto inserting Licenses into Carto. Maintaind by Eran Yonai.'] }, { '📊 Auto Excel Tool': ['file://L:\\Testing\\Tools\\AutoExcelTool', 'Organize your Excel STD files.'] }, { '🔓 Carto Decryptor': ['file://L:\\Testing\\Tools\\CARTO_Decryptor_Tool_1.0.0.13', { 'Alternate link inside R&D folder': 'file://L:\\R&D\\SW\\Utils\\CartoDecryptor\\UI_1.0.0.13' }, 'For decrypting and opening archives created in Carto.'] }] }] }]
+        var bookmarks = [{'Empty Collection': [{'Empty Container': [{'Empty Item': ''}]}]}]
         var news = [{ title: 'news1', content: 'n1c', startsAt: '01/01/2900; 12:00:00', endsAt: '' }, { title: 'news2', content: 'n2c', startsAt: '01/01/2900; 12:00:00', endsAt: '01/01/3900; 12:00:00' }, { title: 'news3', content: 'n3c', startsAt: '01/01/2900; 12:00:00', endsAt: 'never' }, { title: 'news4', content: 'n4c', startsAt: '', endsAt: '01/01/1900; 13:00:00' }, { title: 'news5', content: 'n5c', startsAt: '', endsAt: '01/01/2900; 12:00:00' }, { title: 'news6', content: 'n6c', startsAt: '', endsAt: 'never' }]
 
         var e = 'keyup,keypress,focus,blur,change'.split(',');
@@ -251,6 +255,7 @@
             let temp = (json_obj != undefined) ? func(obj, json_obj) : func(obj)
             obj.body.push(temp)
             obj.HTML.body.main.appendChild(temp.HTML.main)
+            return temp.immutable;
         }
 
         function remove(obj) {
@@ -261,9 +266,9 @@
         function generateAddButton(obj) {
             obj.HTML.body.addButton = createElement('button', { class: 'little-button add-button' }, '+')
             obj.HTML.body.addButton.onclick = () => {
-                obj.HTML.body.main.removeChild(obj.HTML.body.center)
+                obj.HTML.body.main.removeChild(obj.HTML.body.addButton)
                 add(obj)
-                obj.HTML.body.main.appendChild(obj.HTML.body.center)
+                obj.HTML.body.main.appendChild(obj.HTML.body.addButton)
             }
             obj.HTML.body.addButton.hidden = !editMode
             // obj.HTML.body.center = createElement('center', {}, obj.HTML.body.addButton)
@@ -278,8 +283,9 @@
             obj.HTML.head.deleteButton = createElement('button', { class: 'little-button delete-button' })
             obj.HTML.head.deleteButton.onclick = () => { remove(obj) }
             obj.HTML.head.deleteButton.hidden = !editMode;
+            obj.HTML.head.deleteButton.disabled = obj.immutable
 
-            obj.HTML.head.title = createElement('input', { class: obj_type + '-title', value: obj.title, readonly: true },)
+            obj.HTML.head.title = createElement('input', { class: obj_type + '-title', value: obj.title, placeholder:`Empty ${obj_type}` },)
             obj.HTML.head.title.readOnly = !editMode;
 
             if (obj_type == 'item') {
@@ -307,16 +313,18 @@
                 obj.url = Object.values(json_obj)[0]
                 if (obj.url instanceof Array)
                     obj.url = obj.url[0]
-                obj.HTML.body.url = createElement('input', { class: 'item-url', value: obj.url, readonly: true },)
+                obj.HTML.body.url = createElement('input', { class: 'item-url', value: obj.url, placeholder: 'Empty URL', },)//readOnly: !editMode 
                 obj.HTML.body.url.style.display = (editMode)? 'block': 'none'
                 obj.HTML.body.main.hidden = true
                 obj.HTML.body.main.appendChild(createElement('li', { class: 'item-content' }, obj.HTML.body.url))
             }
 
             json_obj = json_obj[obj.title]
+            let immutable_children = 0
             for (let i in json_obj) {
                 if (json_obj[i] instanceof Object) {
-                    add(obj, json_obj[i])
+                    if (add(obj, json_obj[i]))
+                        obj.immutable = true
                 }
             }
             generateAddButton(obj)
@@ -331,7 +339,7 @@
             if (obj.title.startsWith('*')) {
                 obj.immutable = true
                 obj.title = obj.title.substr(1)
-            } else obj.immutable = false;
+            }
 
             obj.HTML.main = createElement(elem_type, { class: obj_type })
 
@@ -378,7 +386,7 @@
 
         var editMode = false;
         class CollectionContainer {
-            constructor(json_colls = [{ 'New Collection': [] }], main_HTML_ID = 'collections', edit_button_ID = 'edit-button') {
+            constructor(json_colls = [{ '': [] }], main_HTML_ID = 'collections', edit_button_ID = 'edit-button') {
                 this.body = []
                 this.HTML = { body: {} }
                 this.HTML.body.main = document.getElementById(main_HTML_ID)
@@ -406,7 +414,7 @@
         }
 
         class Collection {
-            constructor(parent, json_coll = { 'New Collection': [] }) {
+            constructor(parent, json_coll = { '': [] }) {
                 this.parent = parent
                 generateHTML(this, json_coll)
                 this.HTML.main.appendChild(createElement('hr'))
@@ -421,7 +429,7 @@
         }
 
         class Container {
-            constructor(parent, json_cont = { 'New Container': '' }) {
+            constructor(parent, json_cont = { '': '' }) {
                 this.parent = parent
                 generateHTML(this, json_cont)
             }
@@ -435,7 +443,7 @@
         }
 
         class Item {
-            constructor(parent, json_item = { 'New Item': ['Empty URL'] }) {
+            constructor(parent, json_item = { '': [''] }) {
                 this.parent = parent;
                 this.expanded = false;
                 generateHTML(this, json_item)
@@ -690,7 +698,7 @@
     </div>
     <div id="collections"></div>
     <footer>
-        <div id="buttons" style="display: none; float:right; flex-direction: column; ">
+        <div id="buttons" >
             <button id='edit-button' class="intButton editButton" onclick="editButtonClick(cc,newsObj)">Edit</button>
             <button id="download-button" class="intButton saveButton"
                 onclick="bookmarks = cc.JSON; news = newsObj.JSON; download()">Download</button></a>
