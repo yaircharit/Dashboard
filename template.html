@@ -2,15 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-    <meta name="viewport" content="height=device-height,initial-scale=1,shrink-to-fit=no" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name="viewport" content="height=device-height,initial-scale=1,shrink-to-fit=no">
     <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/movies-4/48/pokemon-movie-cinema-ball-512.png">
     <title>SQA Dashboard</title>
-    <link rel='stylesheet' href='style.css' type='text/css' media='all' />
-    <link rel='stylesheet'
-        href='https://fonts.googleapis.com/css?family=Oswald:400,500,700%7CRoboto:400,500,700%7Croboto:400,500,700%7CQuattrocento+Sans:400,500,700'
-        type='text/css' media='all' />
     <style>
         #collections {
             display: inline-flex;
@@ -31,8 +27,13 @@
             list-style-type: none;
         }
 
+        li.item {
+            list-style-type: square;
+        }
+
+
         li.item::marker {
-            font-size: 13px;
+            font-size: 0.8em;
             color: rgb(54, 54, 54);
         }
 
@@ -82,6 +83,7 @@
         }
 
         div#buttons {
+            display: none;
             position: fixed;
             right: 0;
             bottom: 0;
@@ -90,7 +92,7 @@
         button#god-mode-button {
             left: 0;
             bottom: 0;
-            padding: 1.5vw;
+            padding: 1em;
             background-color: transparent;
             position: fixed;
             border: none;
@@ -102,7 +104,7 @@
             background-color: wheat;
         }
 
-        button:disabled{
+        button:disabled {
             background-color: gray;
         }
 
@@ -140,19 +142,19 @@
         }
 
         .container-title {
-            font-size: 1.5vw;
+            font-size: 1.3em;
             color: #222222;
             width: fit-content;
         }
 
         .item-title {
-            font-size: 1.2vw;
+            font-size: 0.8em;
             color: #222222;
             font-style: italic;
             width: -webkit-fill-available;
         }
 
-        .item-head{
+        .item-head {
             display: inline-flex;
             flex-direction: row;
             width: -webkit-fill-available;
@@ -165,14 +167,23 @@
         }
 
         .clickable {
-            color: #455b97;
+            color: #1e44ac;
+        }
+
+        .clickable:hover {
+            cursor: pointer;
+            text-decoration: underline;
         }
 
         .tab-header {
-            background-color: rgb(238, 238, 238);
+            background-color: rgb(201, 201, 201);
             border-radius: 5px 5px 0 0;
             margin-left: 0.5vw;
             padding: 0 1vw;
+        }
+
+        .tab-header.active {
+            background-color: rgb(238, 238, 238);
         }
 
         .tab-content {
@@ -201,16 +212,30 @@
             background-color: transparent;
             border: none;
             resize: none;
+            font-family: 'Quattrocento Sans';
+            font-weight: 300;
+            /* max-width: 10em; */
+        }
+
+        ul{
+            padding: 0.5em;
+        }
+
+        button#download-button {
+            display: none;
+            position: fixed;
+            right: 0;
+            bottom: 0;
         }
     </style>
     <script>
-        const TEXTAREA_WIDTH = 40
+
 
         var reg = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-        var bookmarks = [{'Empty Collection': [{'Empty Container': [{'Empty Item': ''}]}]}]
-        var news = [{ title: 'news1', content: 'n1c', startsAt: '01/01/2900; 12:00:00', endsAt: '' }, { title: 'news2', content: 'n2c', startsAt: '01/01/2900; 12:00:00', endsAt: '01/01/3900; 12:00:00' }, { title: 'news3', content: 'n3c', startsAt: '01/01/2900; 12:00:00', endsAt: 'never' }, { title: 'news4', content: 'n4c', startsAt: '', endsAt: '01/01/1900; 13:00:00' }, { title: 'news5', content: 'n5c', startsAt: '', endsAt: '01/01/2900; 12:00:00' }, { title: 'news6', content: 'n6c', startsAt: '', endsAt: 'never' }]
+        var bookmarks = [{ "Collection Title": [{ "Container Title": [{ "Item Title": ["", { "Sub-Item Title": [""] }] }] }] }]
+        var news = [{ "title": "Welcome", "content": "To enter edit mode click the invisible button in the bottom-left corner of the page :)\nDownload the page (bottom-right corner) to save your modifications", "startsAt": "24/10/2021; 11:24:33", "endsAt": "never" }]
 
-        var e = 'keyup,keypress,focus,blur,change'.split(',');
+
         function createElement(element, attribute, inner) {
             if (typeof (element) === "undefined") {
                 return false;
@@ -236,18 +261,25 @@
                     el.appendChild(document.createTextNode(inner[k]));
                 }
             }
-            if (element == 'input' && (el.classList.contains('collection-title') || el.classList.contains('tab-title'))) {
+            if (element == 'textarea') {
                 addResizeFunc(el)
             }
             return el;
         }
 
-        function addResizeFunc(input_element) {
+        const TEXTAREA_WIDTH = 30
+        const e = 'keyup,keypress,focus,blur,change'.split(',');
+        function addResizeFunc(element) {
+            let def_width = (element.classList.contains('news-content')) ? TEXTAREA_WIDTH * 3 : TEXTAREA_WIDTH
             function fitSize() {
-                input_element.style.width = `${((input_element.value.length == 0) ? input_element.placeholder.length : input_element.value.length)}vw`
+                let longest_row_length = Math.min(Math.max.apply(null, element.innerHTML.toString().split('\n').map((e) => { return e.length })), def_width)
+                let CR = (element.innerHTML.toString().match(/\n/g) || [0]).length - 1
+                element.rows = Math.max(CR, Math.ceil((element.innerHTML.length - CR) / longest_row_length))
+                element.cols = longest_row_length
             }
-            fitSize(input_element)
-            for (var i in e) input_element.addEventListener(e[i], fitSize, false);
+            fitSize(element)
+            for (var i in e) element.addEventListener(e[i], fitSize, false);
+
         }
 
         function add(obj, json_obj = undefined) {
@@ -285,7 +317,7 @@
             obj.HTML.head.deleteButton.hidden = !editMode;
             obj.HTML.head.deleteButton.disabled = obj.immutable
 
-            obj.HTML.head.title = createElement('input', { class: obj_type + '-title', value: obj.title, placeholder:`Empty ${obj_type}` },)
+            obj.HTML.head.title = createElement('textarea', { class: obj_type + '-title', placeholder: `Empty ${obj_type}` }, obj.title)
             obj.HTML.head.title.readOnly = !editMode;
 
             if (obj_type == 'item') {
@@ -313,8 +345,8 @@
                 obj.url = Object.values(json_obj)[0]
                 if (obj.url instanceof Array)
                     obj.url = obj.url[0]
-                obj.HTML.body.url = createElement('input', { class: 'item-url', value: obj.url, placeholder: 'Empty URL', },)//readOnly: !editMode 
-                obj.HTML.body.url.style.display = (editMode)? 'block': 'none'
+                obj.HTML.body.url = createElement('textarea', { class: 'item-url', placeholder: 'Empty URL', }, obj.url)//readOnly: !editMode 
+                obj.HTML.body.url.style.display = (editMode) ? 'block' : 'none'
                 obj.HTML.body.main.hidden = true
                 obj.HTML.body.main.appendChild(createElement('li', { class: 'item-content' }, obj.HTML.body.url))
             }
@@ -361,7 +393,7 @@
                 obj.HTML.head.expandButton.hidden = !editMode && obj.body.length == 0;
                 if (!editMode)
                     obj.url = obj.HTML.body.url.value
-                obj.HTML.body.url.style.display = (editMode)? 'block': 'none'
+                obj.HTML.body.url.style.display = (editMode) ? 'block' : 'none'
                 obj.HTML.body.url.readOnly = !editMode
             }
 
@@ -369,12 +401,14 @@
         }
 
         function download() {
+            downloadButton.style.display = 'none'
             let fullHTML = document.documentElement.innerHTML
             let head = fullHTML.substr(0, fullHTML.search('<bo' + 'dy>'))
+            bookmarks = cc.JSON;
+            news = newsObj.JSON;
             head = head.replace(/\s*var bookmarks = \[.*\n/g, '\n\t\tvar ' + `bookmarks = ${JSON.stringify(bookmarks)}\n`)
             head = head.replace(/\s*var news = \[.*\n/g, '\n\t\tvar ' + `news = ${JSON.stringify(news)}\n`)
-            let header = '<header id="masthead" class="site-header"><div class="site-branding"><h1 class="site-title"><a href="home.html" rel="home">SQA</a></h1><h3 class="site-description">SQA Knowledge Dashboard</br><sup><font color="#7B7B7B" style="font-size:110%;">For Internal Use Only &copy;</font></sup></h3></div><nav id="site-navigation" class="main-navigation"><button class="menu-toggle">Menu</button><a class="skip-link screen-reader-text" href="#content">Skip to content</a><div class="menu-menu-1-container"><ul id="menu-menu-1" class="menu"><li><a href="sqa_school.html">SQA School</a></li><li><a href="SQA_Basics.html">SQA Basics</a></li><li><a href="sw_school.html">SW SCHOOL</a></li><li><a href="BW1.html">BW1</a></li><li><a href="Carto_V7.html">Carto V7</a></li><li><a href="Carto_V8.html">Carto V7.5</a></li><li><a href="nGEN.html">nGEN</a></li><!--<li><a href="trudi.html">Trudi</a></li>--><li><a target="blank" href="bookmarks.html"></a><font color="#7B7B7B">SQA Dashboard</font></a></li></ul></div></nav></header>'
-            let body = '<bo' + 'dy>' + header + '<div id="news"><div id="news-tabs"></div><div id="news-content"></div></div><div id="collections"></div>'
+            let body = '<bo' + 'dy><div id="news"><div id="news-tabs"></div><div id="news-content"></div></div><div id="collections"></div>'
             let footer = fullHTML.substr(fullHTML.search('<foo' + 'ter>')) + ''
             let res = `<!DOCTYPE html><html lang="en">${head}${body}${footer}</html>`
 
@@ -382,6 +416,7 @@
             element.setAttribute('href', `data:text/html;charset=utf-8,${encodeURIComponent(res)}`);
             element.setAttribute('download', 'SQADashboard.html');
             element.click();
+            downloadButton.style.display = 'block'
         }
 
         var editMode = false;
@@ -421,6 +456,7 @@
             }
 
             get JSON() {
+                this.title = this.HTML.head.title.value
                 let temp = {}
                 temp[`${this.title}`] = []
                 for (let i in this.body) temp[`${this.title}`].push(this.body[i].JSON)
@@ -435,6 +471,7 @@
             }
 
             get JSON() {
+                this.title = this.HTML.head.title.value
                 let temp = {}
                 temp[`${this.title}`] = []
                 for (let i in this.body) temp[`${this.title}`].push(this.body[i].JSON)
@@ -472,6 +509,8 @@
             }
 
             get JSON() {
+                this.title = this.HTML.head.title.value
+                this.url = this.HTML.body.url.value
                 let temp = {}
                 temp[`${this.title}`] = [this.url]
                 for (let i in this.body) temp[`${this.title}`].push(this.body[i].JSON)
@@ -513,6 +552,7 @@
 
             clearBodyView() {
                 for (let item in this.body) {
+                    this.body[item].HTML.head.classList.remove('active')
                     this.body[item].HTML.body.style.display = 'none'
                 }
             }
@@ -536,8 +576,8 @@
             displayFirst() {
                 this.clearBodyView()
                 for (let i in this.body) {
-                    if (editMode || (this.body[i].startsAt < now && (this.body[i].endsAt == 'never' || now < new Date(this.body[i].endsAt)))) {
-
+                    if (editMode || (this.body[i].startsAt.getTime() <= now.getTime() && (this.body[i].endsAt == 'never' || now.getTime() <= stringToDate(this.body[i].endsAt).getTime()))) {
+                        this.body[i].HTML.head.classList.add('active')
                         this.body[i].HTML.head.style.display = 'block'
                         this.body[i].HTML.body.style.display = 'block'
                         return;
@@ -552,7 +592,7 @@
                 now = new Date()
                 for (let item in this.body) {
                     temp = this.body[item].JSON
-                    if (temp.endsAt == 'never' || now < new Date(temp.endsAt))
+                    if (stringToDate(temp.startsAt).getTime() <= now.getTime() && (temp.endsAt == 'never' || now.getTime() <= stringToDate(temp.endsAt).getTime()))
                         res.push(temp)
                 }
                 return res
@@ -571,11 +611,11 @@
 
                 this.HTML = {
                     head: createElement('div', { class: 'tab-header' }),
-                    title: createElement('input', { class: 'tab-title', 'data-tab-id': `news${this.id}`, placeholder: 'Empty title', value: this.title }),
+                    title: createElement('textarea', { class: 'tab-title', 'data-tab-id': `news${this.id}`, placeholder: 'Empty title' }, this.title),
                     deleteButton: createElement('button', { class: 'little-button delete-button news-button' },),
 
                     body: createElement('div', { class: 'tab-content', id: `news${this.id}` }),
-                    content: createElement('textarea', { readOnly: editMode, placeholder: 'Empty News' }, this.body),
+                    content: createElement('textarea', { readOnly: editMode, class: 'news-content', placeholder: 'Empty News' }, this.body),
                     dateDiv: createElement('div', { id: `news${this.id}-dates` }),
                     start: createElement('input', { id: `news${this.id}-start`, class: 'date-input', placeHolder: 'YYYY-MM-DD; HH:MM', value: `${dateToString(this.startsAt)}` }),
                     end: createElement('input', { id: `news${this.id}-end`, class: 'date-input', placeHolder: 'YYYY-MM-DD; HH:MM', value: this.endsAt })
@@ -603,24 +643,25 @@
 
             onTabClick() {
                 this.parent.clearBodyView()
+                this.HTML.head.classList.toggle('active')
                 this.HTML.body.style.display = 'block';
             }
 
             toggleEditMode() {
                 this.HTML.deleteButton.hidden = !editMode
                 this.HTML.title.readOnly = !editMode
-                this.title = this.HTML.title.value
                 this.HTML.content.readOnly = !editMode
-                this.body = this.HTML.content.value
                 this.HTML.dateDiv.style.display = (editMode) ? 'block' : 'none'
-                this.startsAt = stringToDate(this.HTML.start.value)
-                this.endsAt = this.HTML.end.value
 
                 this.HTML.head.style.display = (editMode || (this.startsAt <= now && (this.endsAt == 'never' || now.getTime() <= stringToDate(this.endsAt).getTime()))) ? 'block' : 'none'
                 this.HTML.body.style.display = (editMode || (this.startsAt <= now && (this.endsAt == 'never' || now.getTime() <= stringToDate(this.endsAt).getTime()))) ? 'block' : 'none'
             }
 
             get JSON() {
+                this.title = this.HTML.title.value
+                this.body = this.HTML.content.value
+                this.startsAt = stringToDate(this.HTML.start.value)
+                this.endsAt = this.HTML.end.value
                 return {
                     title: this.title,
                     content: this.body,
@@ -631,15 +672,15 @@
         }
         NewsItem.count = 0
 
-        function editButtonClick(coll_container, news) {
-            editMode = !editMode
-            news.toggleEditMode()
-            coll_container.toggleEditMode()
-            editButton.innerHTML = (editMode) ? 'Save' : 'Edit';
-        }
-
         function godButtonClick() {
-            buttonsDiv.style.display = (buttonDiv.style.display == 'none') ? 'block' : 'none';
+            downloadButton.style.display = (downloadButton.style.display != 'block') ? 'block' : 'none';
+            editMode = !editMode
+            if (!editMode) {
+                bookmarks = cc.JSON;
+                news = newsObj.JSON;
+            }
+            newsObj.toggleEditMode()
+            cc.toggleEditMode()
         }
 
         function stringToDate(strObj) {
@@ -657,7 +698,7 @@
         }
 
         function dateToString(dateObj) {
-            let temp = [dateObj.getDate(), dateObj.getMonth(), dateObj.getFullYear(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds()].map((elem)=>{return ((elem <= '9')? "0": "")+elem})
+            let temp = [dateObj.getDate(), dateObj.getMonth(), dateObj.getFullYear(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds()].map((elem) => { return ((elem <= '9') ? "0" : "") + elem })
             return `${temp[0]}/${temp[1]}/${temp[2]}; ${temp[3]}:${temp[4]}:${temp[5]}`
         }
 
@@ -665,54 +706,27 @@
 </head>
 
 <body>
-    <header id="masthead" class="site-header">
-        <div class="site-branding">
-            <h1 class="site-title"><a href="home.html" rel="home">SQA</a></h1>
-            <h3 class="site-description">SQA Knowledge Dashboard</br><sup>
-                    <font color="#7B7B7B" style="font-size:110%;">For Internal Use Only &copy;</font>
-                </sup></h3>
-        </div>
-        <nav id="site-navigation" class="main-navigation">
-            <button class="menu-toggle">Menu</button>
-            <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
-            <div class="menu-menu-1-container">
-                <ul id="menu-menu-1" class="menu">
-                    <li><a href="sqa_school.html">SQA School</a></li>
-                    <li><a href="SQA_Basics.html">SQA Basics</a></li>
-                    <li><a href="sw_school.html">SW SCHOOL</a></li>
-                    <li><a href="BW1.html">BW1</a></li>
-                    <li><a href="Carto_V7.html">Carto V7</a></li>
-                    <li><a href="Carto_V8.html">Carto V7.5</a></li>
-                    <li><a href="nGEN.html">nGEN</a></li>
-                    <!--<li><a href="trudi.html">Trudi</a></li>-->
-                    <li><a target="blank" href="bookmarks.html"></a>
-                        <font color="#7B7B7B">SQA Dashboard</font></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <div id='news'>
+    <div id="news">
         <div id="news-tabs"></div>
         <div id="news-content"></div>
     </div>
     <div id="collections"></div>
     <footer>
-        <div id="buttons" >
-            <button id='edit-button' class="intButton editButton" onclick="editButtonClick(cc,newsObj)">Edit</button>
-            <button id="download-button" class="intButton saveButton"
-                onclick="bookmarks = cc.JSON; news = newsObj.JSON; download()">Download</button></a>
-        </div>
-        <button id='god-mode-button'
-            onclick='buttonsDiv.style.display = (document.getElementById("buttons").style.display == "none")? "block": "none";'></button>
+        <button id="download-button" class="intButton saveButton" onclick="download()"
+            style="display: none;">Download</button>
+        <button id="god-mode-button" onclick="godButtonClick()"></button>
     </footer>
     <script>
-        var buttonsDiv = document.getElementById('buttons')
-        var editButton = document.getElementById('edit-button')
         var downloadButton = document.getElementById('download-button')
-        let cc = new CollectionContainer(bookmarks, 'collections')
-        let newsObj = new NewsFeed('news')
+        var cc = new CollectionContainer(bookmarks, 'collections')
+        var newsObj = new NewsFeed('news')
     </script>
+
+
+
+
+
+
 </body>
 
 </html>
